@@ -10,7 +10,7 @@ mod data;
 use self::data::Position;
 mod graph;
 
-type Graph = graph::UnGraph<Position, (), Edge>;
+type Graph = graph::UnGraph<Position, (), Edge, fnv::FnvBuildHasher>;
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 enum Cost {
