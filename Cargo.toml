@@ -1,0 +1,12 @@
+[package]
+name = "transamerica-hand-test"
+version = "0.1.0"
+authors = ["Scott McMurray <scottmcm@users.noreply.github.com>"]
+edition = "2018"
+
+[dependencies]
+itertools = "0.7"
+
+[dependencies.petgraph]
+version = "0.4"
+#features = ["serde-1"]
