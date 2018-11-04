@@ -1,14 +1,16 @@
 #![allow(dead_code)]
 
-use itertools::{iproduct, Itertools};
+use itertools::Itertools;
 use petgraph::graphmap::UnGraphMap;
 use std::cmp::Reverse;
 use std::collections::{hash_map::Entry, BinaryHeap, HashMap, HashSet};
-use std::hash::{Hash, Hasher};
 use std::ops::Add;
 use std::time::Instant;
 
-type Graph = UnGraphMap<Node, Edge>;
+mod data;
+use self::data::Position;
+
+type Graph = UnGraphMap<Position, Edge>;
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 enum Cost {
@@ -42,106 +44,17 @@ enum Direction {
 }
 use self::Direction::*;
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq)]
-enum Color {
-    Green,
-    Yellow,
-    Red,
-    Blue,
-    Orange,
-}
-use self::Color::*;
-
-#[derive(Debug, Clone, Copy)]
-struct City {
-    pos: Node,
-    color: Color,
-    name: &'static str,
-    // true if not used in 2-or-3-player games
-    dashed: bool,
-}
-
-#[rustfmt::skip]
-const CITIES: &[City] = &[
-    City { pos: Node(0, 2), color: Green, name: "San Diego", dashed: true },
-    City { pos: Node(0, 3), color: Green, name: "Los Angeles", dashed: false },
-    City { pos: Node(0, 6), color: Green, name: "San Francisco", dashed: false },
-    City { pos: Node(1, 7), color: Green, name: "Sacramento", dashed: false },
-    City { pos: Node(2, 9), color: Green, name: "Medford", dashed: false },
-    City { pos: Node(3, 11), color: Green, name: "Portland", dashed: false },
-    City { pos: Node(4, 12), color: Green, name: "Seattle", dashed: true },
-
-    City { pos: Node(4, 4), color: Yellow, name: "Santa Fe", dashed: false },
-    City { pos: Node(4, 8), color: Yellow, name: "Salt Lake City", dashed: false },
-    City { pos: Node(6, 7), color: Yellow, name: "Denver", dashed: true },
-    City { pos: Node(7, 4), color: Yellow, name: "Oklahoma City", dashed: false },
-    City { pos: Node(9, 6), color: Yellow, name: "Kansas City", dashed: true },
-    City { pos: Node(9, 8), color: Yellow, name: "Omaha", dashed: false },
-    City { pos: Node(11, 6), color: Yellow, name: "St. Louis", dashed: false },
-
-    City { pos: Node(2, 3), color: Red, name: "Phoenix", dashed: false },
-    City { pos: Node(3, 1), color: Red, name: "El Paso", dashed: false },
-    City { pos: Node(6, 0), color: Red, name: "Houston", dashed: true },
-    City { pos: Node(7, 2), color: Red, name: "Dallas", dashed: false },
-    City { pos: Node(8, 0), color: Red, name: "New Orleans", dashed: false },
-    City { pos: Node(10, 3), color: Red, name: "Memphis", dashed: false },
-    City { pos: Node(11, 2), color: Red, name: "Atlanta", dashed: true },
-
-    City { pos: Node(6, 11), color: Blue, name: "Helena", dashed: false },
-    City { pos: Node(10, 11), color: Blue, name: "Bismark", dashed: false },
-    City { pos: Node(12, 10), color: Blue, name: "Minneapolis", dashed: false },
-    City { pos: Node(13, 11), color: Blue, name: "Duluth", dashed: true },
-    City { pos: Node(14, 7), color: Blue, name: "Cincinnati", dashed: false },
-    City { pos: Node(14, 9), color: Blue, name: "Chicago", dashed: false },
-    City { pos: Node(17, 10), color: Blue, name: "Buffalo", dashed: true },
-
-    City { pos: Node(11, 0), color: Orange, name: "Jacksonville", dashed: false },
-    City { pos: Node(13, 2), color: Orange, name: "Charleston", dashed: false },
-    City { pos: Node(13, 4), color: Orange, name: "Winston", dashed: false },
-    City { pos: Node(15, 5), color: Orange, name: "Richmond", dashed: true },
-    City { pos: Node(16, 7), color: Orange, name: "Washington", dashed: false },
-    City { pos: Node(17, 8), color: Orange, name: "New York", dashed: false },
-    City { pos: Node(19, 10), color: Orange, name: "Boston", dashed: true },
-];
-
-fn cities(c: Color, d: Option<bool>) -> impl Iterator<Item = Node> + Clone {
-    CITIES
-        .iter()
-        .filter(move |x| x.color == c && (d.is_none() || Some(x.dashed) == d))
-        .map(|x| x.pos)
-}
-
-fn hands(d: Option<bool>) -> impl Iterator<Item = [Node; 5]> + Clone {
-    iproduct!(
-        cities(Green, d),
-        cities(Red, d),
-        cities(Yellow, d),
-        cities(Blue, d),
-        cities(Orange, d)
-    ).map(|(c0, c1, c2, c3, c4)| [c0, c1, c2, c3, c4])
-}
-
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
-#[repr(align(2))]
-struct Node(u8, u8);
-
-impl Hash for Node {
-    fn hash<H: Hasher>(&self, hasher: &mut H) {
-        hasher.write_u16(((self.0 as u16) << 8) | self.1 as u16);
-    }
-}
-
-impl Add<Direction> for Node {
-    type Output = Node;
-    fn add(self, d: Direction) -> Node {
-        let Node(x, y) = self;
+impl Add<Direction> for Position {
+    type Output = Position;
+    fn add(self, d: Direction) -> Position {
+        let Position(x, y) = self;
         match d {
-            Right => Node(x + 1, y),
-            UpRight => Node(x + 1, y + 1),
-            UpLeft => Node(x, y + 1),
-            Left => Node(x - 1, y),
-            DownLeft => Node(x - 1, y - 1),
-            DownRight => Node(x, y - 1),
+            Right => Position(x + 1, y),
+            UpRight => Position(x + 1, y + 1),
+            UpLeft => Position(x, y + 1),
+            Left => Position(x - 1, y),
+            DownLeft => Position(x - 1, y - 1),
+            DownRight => Position(x, y - 1),
         }
     }
 }
@@ -450,7 +363,7 @@ fn make_board() -> Graph {
     ];
     for (c, i) in columns.iter().zip(0..) {
         for (r, j) in c.iter().zip(0..) {
-            let n = Node(i, j);
+            let n = Position(i, j);
             for (k, d) in [Right, UpRight, UpLeft].iter().cloned().enumerate() {
                 if r[k] != Inf {
                     //println!("{:?} <-> {:?}: {:?}", n, n + d, r[k]);
@@ -462,11 +375,11 @@ fn make_board() -> Graph {
     g
 }
 
-fn shortest_path(g: &Graph, a: Node, b: Node) -> (usize, Vec<Node>) {
+fn shortest_path(g: &Graph, a: Position, b: Position) -> (usize, Vec<Position>) {
     shortest_path_any(g, a, |c| c == b)
 }
 
-fn shortest_path_any(g: &Graph, a: Node, f: impl Fn(Node) -> bool) -> (usize, Vec<Node>) {
+fn shortest_path_any(g: &Graph, a: Position, f: impl Fn(Position) -> bool) -> (usize, Vec<Position>) {
     if f(a) {
         return (0, vec![a]);
     }
@@ -502,7 +415,7 @@ fn shortest_path_any(g: &Graph, a: Node, f: impl Fn(Node) -> bool) -> (usize, Ve
     }
 }
 
-fn smallest_tree(g: &Graph, ns: &[Node]) -> (usize, HashSet<Node>) {
+fn smallest_tree(g: &Graph, ns: &[Position]) -> (usize, HashSet<Position>) {
     let first = ns
         .iter()
         .cloned()
@@ -540,24 +453,24 @@ fn main() {
     //println!("{} nodes; {} edges", g.node_count(), g.edge_count());
     //println!("{:?}", g);
 
-    // let p = shortest_path(&g, Node(0, 4), Node(3, 4));
+    // let p = shortest_path(&g, Position(0, 4), Position(3, 4));
     // println!("{:?}", p);
 
-    // let p = shortest_path(&g, Node(3, 4), Node(0, 4));
+    // let p = shortest_path(&g, Position(3, 4), Position(0, 4));
     // println!("{:?}", p);
 
-    let cities_by_pos = CITIES
+    let cities_by_pos = data::CITIES
         .iter()
         .map(|x| (x.pos, *x))
         .collect::<HashMap<_, _>>();
 
     let mut all_hands = Vec::new();
     let mut hands_by_city = HashMap::<_, Vec<_>>::new();
-    for a in hands(None) {
+    for a in data::hands(None) {
         let mut g = g.clone();
 
         // Don't go through cities you don't own
-        for c in CITIES {
+        for c in data::CITIES {
             if !a.contains(&c.pos) {
                 g.remove_node(c.pos);
             }
@@ -614,7 +527,7 @@ fn main() {
         );
     }
 
-    for c in CITIES {
+    for c in data::CITIES {
         println!("*** {:?}: {} ({:?}) ***", c.color, c.name, c.pos);
         let hands = hands_by_city.get_mut(&c.pos).unwrap();
         // let avg = hands.iter().map(|x| (x.0).0).sum::<usize>() as f32 / hands.len() as f32;
