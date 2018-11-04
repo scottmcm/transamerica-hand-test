@@ -1,7 +1,6 @@
 #![allow(dead_code)]
 
 use itertools::Itertools;
-use petgraph::graphmap::UnGraphMap;
 use std::cmp::Reverse;
 use std::collections::{hash_map::Entry, BinaryHeap, HashMap, HashSet};
 use std::ops::Add;
@@ -9,8 +8,9 @@ use std::time::Instant;
 
 mod data;
 use self::data::Position;
+mod graph;
 
-type Graph = UnGraphMap<Position, Edge>;
+type Graph = graph::UnGraph<Position, (), Edge>;
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 enum Cost {
@@ -367,6 +367,8 @@ fn make_board() -> Graph {
             for (k, d) in [Right, UpRight, UpLeft].iter().cloned().enumerate() {
                 if r[k] != Inf {
                     //println!("{:?} <-> {:?}: {:?}", n, n + d, r[k]);
+                    g.try_add_node(n, ());
+                    g.try_add_node(n + d, ());
                     g.add_edge(n, n + d, Edge { cost: r[k] });
                 }
             }
@@ -379,13 +381,17 @@ fn shortest_path(g: &Graph, a: Position, b: Position) -> (usize, Vec<Position>) 
     shortest_path_any(g, a, |c| c == b)
 }
 
-fn shortest_path_any(g: &Graph, a: Position, f: impl Fn(Position) -> bool) -> (usize, Vec<Position>) {
+fn shortest_path_any(
+    g: &Graph,
+    a: Position,
+    f: impl Fn(Position) -> bool,
+) -> (usize, Vec<Position>) {
     if f(a) {
         return (0, vec![a]);
     }
 
-    let mut distances = HashMap::with_capacity(g.node_count());
-    let mut heap = BinaryHeap::with_capacity(g.edge_count());
+    let mut distances = HashMap::with_capacity(g.nodes().len());
+    let mut heap = BinaryHeap::with_capacity(g.edges().len());
     heap.push((Reverse((0, 0)), (a, a)));
     let (steps, total, last) = loop {
         let (Reverse((d, s)), (n, p)) = heap.pop().unwrap();
@@ -397,7 +403,7 @@ fn shortest_path_any(g: &Graph, a: Position, f: impl Fn(Position) -> bool) -> (u
                 break (s, d, n);
             }
 
-            for (_, m, e) in g.edges(n) {
+            for (m, e) in g.neighbours(n) {
                 heap.push((Reverse((d + e.cost, s + 1)), (m, n)));
             }
         }

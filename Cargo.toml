@@ -6,7 +6,3 @@ edition = "2018"
 
 [dependencies]
 itertools = "0.7"
-
-[dependencies.petgraph]
-version = "0.4"
-#features = ["serde-1"]
