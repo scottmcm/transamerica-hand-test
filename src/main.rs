@@ -4,6 +4,7 @@ use itertools::{iproduct, Itertools};
 use petgraph::graphmap::UnGraphMap;
 use std::cmp::Reverse;
 use std::collections::{hash_map::Entry, BinaryHeap, HashMap, HashSet};
+use std::hash::{Hash, Hasher};
 use std::ops::Add;
 use std::time::Instant;
 
@@ -120,9 +121,15 @@ fn hands(d: Option<bool>) -> impl Iterator<Item = [Node; 5]> + Clone {
     ).map(|(c0, c1, c2, c3, c4)| [c0, c1, c2, c3, c4])
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(align(2))]
 struct Node(u8, u8);
+
+impl Hash for Node {
+    fn hash<H: Hasher>(&self, hasher: &mut H) {
+        hasher.write_u16(((self.0 as u16) << 8) | self.1 as u16);
+    }
+}
 
 impl Add<Direction> for Node {
     type Output = Node;
