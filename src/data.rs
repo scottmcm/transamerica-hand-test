@@ -1,5 +1,6 @@
-use std::hash::{Hash, Hasher};
 use itertools::iproduct;
+use std::hash::{Hash, Hasher};
+use std::ops::Add;
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum Color {
@@ -88,4 +89,371 @@ pub fn hands(d: Option<bool>) -> impl Iterator<Item = [Position; 5]> + Clone {
         cities(Blue, d),
         cities(Orange, d)
     ).map(|(c0, c1, c2, c3, c4)| [c0, c1, c2, c3, c4])
+}
+
+pub type BoardGraph = crate::graph::UnGraph<Position, (), Edge, fnv::FnvBuildHasher>;
+
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+pub enum Cost {
+    Zero,
+    One,
+    Two,
+    Inf,
+}
+use self::Cost::*;
+
+impl Add<Cost> for usize {
+    type Output = usize;
+    fn add(self, other: Cost) -> usize {
+        self + match other {
+            Zero => 0,
+            One => 1,
+            Two => 2,
+            _ => unimplemented!(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+enum Direction {
+    Right,
+    UpRight,
+    UpLeft,
+    Left,
+    DownLeft,
+    DownRight,
+}
+use self::Direction::*;
+
+impl Add<Direction> for Position {
+    type Output = Position;
+    fn add(self, d: Direction) -> Position {
+        let Position(x, y) = self;
+        match d {
+            Right => Position(x + 1, y),
+            UpRight => Position(x + 1, y + 1),
+            UpLeft => Position(x, y + 1),
+            Left => Position(x - 1, y),
+            DownLeft => Position(x - 1, y - 1),
+            DownRight => Position(x, y - 1),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct Edge {
+    pub cost: Cost,
+}
+
+pub fn make_board() -> BoardGraph {
+    let mut g = BoardGraph::with_capacity(188, 509);
+    let columns: &[&[_]] = &[
+        // 0
+        &[
+            [Inf, Inf, Inf], // 0
+            [Inf, Inf, Inf], // 1
+            [Two, One, One], // 2
+            [Two, One, One], // 3
+            [Two, One, One], // 4
+            [Two, Two, One], // 5
+            [One, One, Inf], // 6
+        ],
+        // 1
+        &[
+            [Inf, Inf, Inf], // 0
+            [One, One, One], // 1
+            [One, One, Two], // 2
+            [Two, Two, One], // 3
+            [Two, One, One], // 4
+            [One, One, One], // 5
+            [Two, One, Two], // 6
+            [Two, Two, One], // 7
+            [Two, One, Inf], // 8
+        ],
+        // 2
+        &[
+            [Inf, Inf, Inf], // 0
+            [One, One, One], // 1
+            [One, Two, One], // 2
+            [Two, Two, One], // 3
+            [Two, One, Two], // 4
+            [Two, One, One], // 5
+            [One, One, Two], // 6
+            [Two, Two, One], // 7
+            [One, One, Two], // 8
+            [Two, Two, One], // 9
+            [Two, One, Inf], // 10
+        ],
+        // 3
+        &[
+            [One, One, One], // 0
+            [One, One, One], // 1
+            [One, One, Two], // 2
+            [One, One, One], // 3
+            [One, One, One], // 4
+            [One, One, Two], // 5
+            [Two, One, One], // 6
+            [One, One, One], // 7
+            [One, One, One], // 8
+            [One, One, One], // 9
+            [One, One, Two], // 10
+            [Two, One, Inf], // 11
+        ],
+        // 4
+        &[
+            [One, One, One], // 0
+            [One, One, One], // 1
+            [One, One, One], // 2
+            [One, One, One], // 3
+            [One, One, One], // 4
+            [Two, One, One], // 5
+            [One, Two, Two], // 6
+            [One, Two, One], // 7
+            [One, One, One], // 8
+            [One, One, One], // 9
+            [One, One, One], // 10
+            [One, One, Two], // 11
+            [Two, Inf, Inf], // 12
+        ],
+        // 5
+        &[
+            [One, One, One], // 0
+            [One, One, One], // 1
+            [One, One, One], // 2
+            [One, One, One], // 3
+            [One, One, One], // 4
+            [One, One, Two], // 5
+            [Two, Two, One], // 6
+            [Two, One, One], // 7
+            [One, One, One], // 8
+            [One, One, One], // 9
+            [Two, Two, One], // 10
+            [Two, Two, One], // 11
+            [One, Inf, Inf], // 12
+        ],
+        // 6
+        &[
+            [One, One, One], // 0
+            [One, One, One], // 1
+            [One, One, One], // 2
+            [One, One, One], // 3
+            [One, One, One], // 4
+            [One, One, One], // 5
+            [One, One, One], // 6
+            [One, One, One], // 7
+            [One, One, One], // 8
+            [Two, Two, One], // 9
+            [Two, Two, One], // 10
+            [Two, One, One], // 11
+            [One, Inf, Inf], // 12
+        ],
+        // 7
+        &[
+            [Two, One, One], // 0
+            [One, One, One], // 1
+            [One, One, One], // 2
+            [One, One, One], // 3
+            [One, One, One], // 4
+            [One, One, One], // 5
+            [One, One, One], // 6
+            [One, One, One], // 7
+            [One, One, One], // 8
+            [One, One, One], // 9
+            [One, One, One], // 10
+            [One, Two, One], // 11
+            [One, Inf, Inf], // 12
+        ],
+        // 8
+        &[
+            [One, One, Two], // 0
+            [Two, Two, One], // 1
+            [Two, One, One], // 2
+            [One, One, One], // 3
+            [One, One, One], // 4
+            [One, One, One], // 5
+            [One, One, One], // 6
+            [One, One, One], // 7
+            [One, One, One], // 8
+            [One, One, One], // 9
+            [One, One, One], // 10
+            [One, Two, Two], // 11
+            [One, Inf, Inf], // 12
+        ],
+        // 9
+        &[
+            [One, One, One], // 0
+            [One, One, One], // 1
+            [One, One, Two], // 2
+            [Two, One, One], // 3
+            [One, One, One], // 4
+            [One, One, One], // 5
+            [One, Two, One], // 6
+            [Two, Two, One], // 7
+            [Two, Two, One], // 8
+            [Two, Two, One], // 9
+            [Two, Two, One], // 10
+            [Two, Two, Two], // 11
+            [One, Inf, Inf], // 12
+        ],
+        // 10
+        &[
+            [One, One, One], // 0
+            [One, One, One], // 1
+            [One, One, One], // 2
+            [One, One, Two], // 3
+            [Two, One, One], // 4
+            [One, One, One], // 5
+            [One, Two, Two], // 6
+            [One, One, One], // 7
+            [One, One, One], // 8
+            [One, One, One], // 9
+            [One, One, One], // 10
+            [One, One, One], // 11
+            [One, Inf, Inf], // 12
+        ],
+        // 11
+        &[
+            [Inf, One, One], // 0
+            [One, One, One], // 1
+            [One, One, One], // 2
+            [Two, One, One], // 3
+            [One, One, Two], // 4
+            [Two, Two, One], // 5
+            [Two, Two, Two], // 6
+            [Two, Two, One], // 7
+            [Two, One, One], // 8
+            [One, One, One], // 9
+            [One, One, One], // 10
+            [One, One, One], // 11
+            [One, Inf, Inf], // 12
+        ],
+        // 12
+        &[
+            [Inf, Inf, Inf], // 0
+            [Inf, One, One], // 1
+            [One, One, One], // 2
+            [One, One, Two], // 3
+            [Two, One, One], // 4
+            [One, One, Two], // 5
+            [Two, One, One], // 6
+            [One, One, One], // 7
+            [One, One, Two], // 8
+            [Two, Two, One], // 9
+            [Two, Two, One], // 10
+            [Two, One, One], // 11
+            [One, Inf, Inf], // 12
+        ],
+        // 13
+        &[
+            [Inf, Inf, Inf], // 0
+            [Inf, Inf, Inf], // 1
+            [Inf, One, One], // 2
+            [One, One, One], // 3
+            [One, One, Two], // 4
+            [Two, One, One], // 5
+            [One, Two, Two], // 6
+            [One, One, One], // 7
+            [One, One, One], // 8
+            [One, One, One], // 9
+            [One, One, One], // 10
+            [One, Inf, One], // 11
+        ],
+        // 14
+        &[
+            [Inf, Inf, Inf], // 0
+            [Inf, Inf, Inf], // 1
+            [Inf, Inf, Inf], // 2
+            [Inf, One, One], // 3
+            [One, One, One], // 4
+            [One, One, Two], // 5
+            [Two, One, Two], // 6
+            [One, One, One], // 7
+            [One, One, One], // 8
+            [One, Inf, One], // 9
+            [Inf, Inf, One], // 10
+        ],
+        // 15
+        &[
+            [Inf, Inf, Inf], // 0
+            [Inf, Inf, Inf], // 1
+            [Inf, Inf, Inf], // 2
+            [Inf, Inf, Inf], // 3
+            [Inf, Inf, One], // 4
+            [Inf, Inf, One], // 5
+            [Inf, One, Two], // 6
+            [Two, One, One], // 7
+            [One, One, One], // 8
+            [One, Inf, Inf], // 9
+        ],
+        // 16
+        &[
+            [Inf, Inf, Inf], // 0
+            [Inf, Inf, Inf], // 1
+            [Inf, Inf, Inf], // 2
+            [Inf, Inf, Inf], // 3
+            [Inf, Inf, Inf], // 4
+            [Inf, Inf, Inf], // 5
+            [Inf, Inf, Inf], // 6
+            [Inf, One, Two], // 7
+            [Two, One, One], // 8
+            [One, One, Inf], // 9
+        ],
+        // 17
+        &[
+            [Inf, Inf, Inf], // 0
+            [Inf, Inf, Inf], // 1
+            [Inf, Inf, Inf], // 2
+            [Inf, Inf, Inf], // 3
+            [Inf, Inf, Inf], // 4
+            [Inf, Inf, Inf], // 5
+            [Inf, Inf, Inf], // 6
+            [Inf, Inf, Inf], // 7
+            [Inf, One, Two], // 8
+            [One, One, One], // 9
+            [One, One, Inf], // 10
+        ],
+        // 18
+        &[
+            [Inf, Inf, Inf], // 0
+            [Inf, Inf, Inf], // 1
+            [Inf, Inf, Inf], // 2
+            [Inf, Inf, Inf], // 3
+            [Inf, Inf, Inf], // 4
+            [Inf, Inf, Inf], // 5
+            [Inf, Inf, Inf], // 6
+            [Inf, Inf, Inf], // 7
+            [Inf, Inf, Inf], // 8
+            [Inf, One, One], // 9
+            [One, One, One], // 10
+            [One, Inf, Inf], // 11
+        ],
+        // 19
+        &[
+            [Inf, Inf, Inf], // 0
+            [Inf, Inf, Inf], // 1
+            [Inf, Inf, Inf], // 2
+            [Inf, Inf, Inf], // 3
+            [Inf, Inf, Inf], // 4
+            [Inf, Inf, Inf], // 5
+            [Inf, Inf, Inf], // 6
+            [Inf, Inf, Inf], // 7
+            [Inf, Inf, Inf], // 8
+            [Inf, Inf, Inf], // 9
+            [Inf, Inf, One], // 10
+        ],
+    ];
+    for (c, i) in columns.iter().zip(0..) {
+        for (r, j) in c.iter().zip(0..) {
+            let n = Position(i, j);
+            for (k, d) in [Right, UpRight, UpLeft].iter().cloned().enumerate() {
+                if r[k] != Inf {
+                    //println!("{:?} <-> {:?}: {:?}", n, n + d, r[k]);
+                    g.try_add_node(n, ());
+                    g.try_add_node(n + d, ());
+                    g.add_edge(n, n + d, Edge { cost: r[k] });
+                }
+            }
+        }
+    }
+    g
 }
