@@ -35,11 +35,11 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
         }
     }
 
-    pub fn nodes(&self) -> impl Iterator<Item = (I, &N)> + ExactSizeIterator {
+    pub fn nodes(&self) -> impl ExactSizeIterator<Item = (I, &N)> {
         self.nodes.iter().map(|(k, v)| (*k, v))
     }
 
-    pub fn nodes_mut(&mut self) -> impl Iterator<Item = (I, &mut N)> + ExactSizeIterator {
+    pub fn nodes_mut(&mut self) -> impl ExactSizeIterator<Item = (I, &mut N)> {
         self.nodes.iter_mut().map(|(k, v)| (*k, v))
     }
 
@@ -78,11 +78,11 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
         self.try_remove_node(i).expect("Node does not exist")
     }
 
-    pub fn edges(&self) -> impl Iterator<Item = (I, I, &E)> + ExactSizeIterator {
+    pub fn edges(&self) -> impl ExactSizeIterator<Item = (I, I, &E)> {
         self.edges.iter().map(|(k, v)| (k.0, k.1, v))
     }
 
-    pub fn edges_mut(&mut self) -> impl Iterator<Item = (I, I, &mut E)> + ExactSizeIterator {
+    pub fn edges_mut(&mut self) -> impl ExactSizeIterator<Item = (I, I, &mut E)> {
         self.edges.iter_mut().map(|(k, v)| (k.0, k.1, v))
     }
 
@@ -104,7 +104,7 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
         self.try_add_edge(i, j, e).expect("Edge already exists");
     }
 
-    pub fn neighbours(&self, i: I) -> impl Iterator<Item = (I, &E)> + ExactSizeIterator {
+    pub fn neighbours(&self, i: I) -> impl ExactSizeIterator<Item = (I, &E)> {
         let e = self.adjacency.get(&i).expect("Node does not exist");
         e.iter()
             .cloned()

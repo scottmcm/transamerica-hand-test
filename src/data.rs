@@ -74,7 +74,7 @@ pub const CITIES: &[City] = &[
     City { pos: Position(19, 10), color: Orange, name: "Boston", dashed: true },
 ];
 
-fn cities(c: Color, d: Option<bool>) -> impl Iterator<Item = Position> + Clone {
+fn cities(c: Color, d: Option<bool>) -> impl DoubleEndedIterator<Item = Position> + Clone {
     CITIES
         .iter()
         .filter(move |x| x.color == c && (d.is_none() || Some(x.dashed) == d))
