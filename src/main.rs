@@ -1,8 +1,10 @@
 #![allow(dead_code)]
 
 use itertools::Itertools;
+use rayon::prelude::*;
 use std::cmp::Reverse;
 use std::collections::{hash_map::Entry, BinaryHeap, HashMap, HashSet};
+use std::sync::Mutex;
 use std::time::Instant;
 
 mod data;
@@ -102,24 +104,27 @@ fn main() {
         .map(|x| (x.pos, *x))
         .collect::<HashMap<_, _>>();
 
-    let mut all_hands = Vec::new();
-    let mut hands_by_city = HashMap::<_, Vec<_>>::new();
-    for a in data::hands(None) {
-        let mut g = g.clone();
+    let hands_by_city = Mutex::new(HashMap::<_, Vec<_>>::new());
+    let mut all_hands = data::hands(None)
+        .par_bridge()
+        .map(|a| {
+            let mut g = g.clone();
 
-        // Don't go through cities you don't own
-        for c in data::CITIES {
-            if !a.contains(&c.pos) {
-                g.remove_node(c.pos);
+            // Don't go through cities you don't own
+            for c in data::CITIES {
+                if !a.contains(&c.pos) {
+                    g.remove_node(c.pos);
+                }
             }
-        }
 
-        let hand = (smallest_tree(&g, &a), a);
-        for c in a.iter().cloned() {
-            hands_by_city.entry(c).or_default().push(hand.clone());
-        }
-        all_hands.push(hand);
-    }
+            let hand = (smallest_tree(&g, &a), a);
+            for c in a.iter().cloned() {
+                hands_by_city.lock().unwrap().entry(c).or_default().push(hand.clone());
+            }
+            hand
+        })
+        .collect::<Vec<_>>();
+    let mut hands_by_city = hands_by_city.into_inner().unwrap();
 
     println!("*** Everything ***");
     all_hands.sort_unstable_by_key(|x| (x.0).0);
@@ -163,6 +168,7 @@ fn main() {
                 .map(|x| cities_by_pos.get(x).unwrap().name)
                 .collect::<Vec<_>>()
         );
+        println!();
     }
 
     for c in data::CITIES {
@@ -215,7 +221,7 @@ fn main() {
     }
 
     let elapsed = start_instant.elapsed();
-    println!("Done in {:?}", elapsed);
+    eprintln!("Done in {:?}", elapsed);
 }
 
 #[derive(Debug, Clone, Copy)]
