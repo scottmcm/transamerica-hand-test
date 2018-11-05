@@ -127,7 +127,7 @@ fn main() {
     let mut hands_by_city = hands_by_city.into_inner().unwrap();
 
     println!("*** Everything ***");
-    all_hands.sort_unstable_by_key(|x| (x.0).0);
+    all_hands.sort_unstable_by_key(|x| ((x.0).0, x.1));
     let all_stats = all_hands
         .iter()
         .map(|x| ((x.0).0 as f64).into())
@@ -176,7 +176,7 @@ fn main() {
         let hands = hands_by_city.get_mut(&c.pos).unwrap();
         // let avg = hands.iter().map(|x| (x.0).0).sum::<usize>() as f32 / hands.len() as f32;
         // println!("average: {:?}", avg);
-        hands.sort_unstable_by_key(|x| (x.0).0);
+        hands.sort_unstable_by_key(|x| ((x.0).0, x.1));
         let stats = hands
             .iter()
             .map(|x| ((x.0).0 as f64).into())
