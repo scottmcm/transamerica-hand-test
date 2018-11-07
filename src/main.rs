@@ -4,6 +4,7 @@ use itertools::Itertools;
 use rayon::prelude::*;
 use std::cmp::Reverse;
 use std::collections::{hash_map::Entry, BinaryHeap, HashMap, HashSet};
+use std::iter::FromIterator;
 use std::sync::Mutex;
 use std::time::Instant;
 
@@ -119,20 +120,23 @@ fn main() {
 
             let hand = (smallest_tree(&g, &a), a);
             for c in a.iter().cloned() {
-                hands_by_city.lock().unwrap().entry(c).or_default().push(hand.clone());
+                hands_by_city
+                    .lock()
+                    .unwrap()
+                    .entry(c)
+                    .or_default()
+                    .push(hand.clone());
             }
             hand
-        })
-        .collect::<Vec<_>>();
+        }).collect::<Vec<_>>();
     let mut hands_by_city = hands_by_city.into_inner().unwrap();
 
     println!("*** Everything ***");
     all_hands.sort_unstable_by_key(|x| ((x.0).0, x.1));
     let all_stats = all_hands
         .iter()
-        .map(|x| ((x.0).0 as f64).into())
-        .tree_fold1(ParallelVariance::merge)
-        .unwrap();
+        .map(|x| (x.0).0 as f64)
+        .collect::<ParallelVariance>();
     println!(
         "mean: {:.2} stdev: {:.2}",
         all_stats.mean(),
@@ -179,9 +183,8 @@ fn main() {
         hands.sort_unstable_by_key(|x| ((x.0).0, x.1));
         let stats = hands
             .iter()
-            .map(|x| ((x.0).0 as f64).into())
-            .tree_fold1(ParallelVariance::merge)
-            .unwrap();
+            .map(|x| (x.0).0 as f64)
+            .collect::<ParallelVariance>();
         println!(
             "mean: {:.2} ({:+.1}) stdev: {:.2} ({:+.1})",
             stats.mean(),
@@ -224,7 +227,7 @@ fn main() {
     eprintln!("Done in {:?}", elapsed);
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 struct ParallelVariance {
     n: f64,
     x: f64,
@@ -255,5 +258,14 @@ impl ParallelVariance {
 impl From<f64> for ParallelVariance {
     fn from(x: f64) -> Self {
         Self { n: 1.0, x, m: 0.0 }
+    }
+}
+
+impl FromIterator<f64> for ParallelVariance {
+    fn from_iter<I: IntoIterator<Item = f64>>(it: I) -> Self {
+        it.into_iter()
+            .map(|x| x.into())
+            .tree_fold1(ParallelVariance::merge)
+            .unwrap_or_default()
     }
 }
