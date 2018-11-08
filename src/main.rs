@@ -4,7 +4,7 @@ use fnv::{FnvHashSet, FnvHashMap};
 use itertools::Itertools;
 use rayon::prelude::*;
 use std::cmp::Reverse;
-use std::collections::{hash_map::Entry, BinaryHeap};
+use std::collections::{hash_map::Entry, BinaryHeap, BTreeMap};
 use std::iter::FromIterator;
 use std::sync::Mutex;
 use std::time::Instant;
@@ -88,6 +88,12 @@ fn smallest_tree(g: &BoardGraph, ns: &[Position]) -> (usize, FnvHashSet<Position
     (cost, reached)
 }
 
+fn histogram<T: Ord>(it: impl Iterator<Item = T>) -> BTreeMap<T, usize> {
+    let mut counts = BTreeMap::new();
+    it.for_each(|x| *counts.entry(x).or_default() += 1);
+    counts
+}
+
 fn main() {
     let start_instant = Instant::now();
 
@@ -144,6 +150,8 @@ fn main() {
         all_stats.pop_stdev()
     );
     {
+        let hist = histogram(all_hands.iter().map(|x| (x.0).0));
+        println!("histogram: {:?}", hist);
         let best = all_hands.first().unwrap();
         println!(
             "best: {:?} {:?}",

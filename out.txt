@@ -1,5 +1,6 @@
 *** Everything ***
 mean: 28.62 stdev: 2.58
+histogram: {19: 1, 20: 7, 21: 46, 22: 126, 23: 283, 24: 516, 25: 992, 26: 1557, 27: 1964, 28: 2388, 29: 2511, 30: 2329, 31: 1891, 32: 1215, 33: 638, 34: 229, 35: 87, 36: 20, 37: 5, 38: 2}
 best: 19 ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
 median: 29 ["Los Angeles", "New Orleans", "St. Louis", "Duluth", "Winston"]
 worst: 38 ["Seattle", "Phoenix", "Omaha", "Buffalo", "Jacksonville"]
