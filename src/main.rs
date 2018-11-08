@@ -1,9 +1,10 @@
 #![allow(dead_code)]
 
+use fnv::{FnvHashSet, FnvHashMap};
 use itertools::Itertools;
 use rayon::prelude::*;
 use std::cmp::Reverse;
-use std::collections::{hash_map::Entry, BinaryHeap, HashMap, HashSet};
+use std::collections::{hash_map::Entry, BinaryHeap};
 use std::iter::FromIterator;
 use std::sync::Mutex;
 use std::time::Instant;
@@ -25,7 +26,7 @@ fn shortest_path_any(
         return (0, vec![a]);
     }
 
-    let mut distances = HashMap::with_capacity(g.nodes().len());
+    let mut distances = FnvHashMap::with_capacity_and_hasher(g.nodes().len(), Default::default());
     let mut heap = BinaryHeap::with_capacity(g.edges().len());
     heap.push((Reverse((0, 0)), (a, a)));
     let (steps, total, last) = loop {
@@ -56,7 +57,7 @@ fn shortest_path_any(
     }
 }
 
-fn smallest_tree(g: &BoardGraph, ns: &[Position]) -> (usize, HashSet<Position>) {
+fn smallest_tree(g: &BoardGraph, ns: &[Position]) -> (usize, FnvHashSet<Position>) {
     let first = ns
         .iter()
         .cloned()
@@ -64,12 +65,12 @@ fn smallest_tree(g: &BoardGraph, ns: &[Position]) -> (usize, HashSet<Position>) 
         .min()
         .unwrap();
     let mut cost = first.0;
-    let mut reached = first.1.into_iter().collect::<HashSet<_>>();
+    let mut reached = first.1.into_iter().collect::<FnvHashSet<_>>();
     let mut unreached = ns
         .iter()
         .cloned()
         .filter(|p| !reached.contains(p))
-        .collect::<HashSet<_>>();
+        .collect::<FnvHashSet<_>>();
     while let Some(best) = unreached
         .iter()
         .cloned()
@@ -103,9 +104,9 @@ fn main() {
     let cities_by_pos = data::CITIES
         .iter()
         .map(|x| (x.pos, *x))
-        .collect::<HashMap<_, _>>();
+        .collect::<FnvHashMap<_, _>>();
 
-    let hands_by_city = Mutex::new(HashMap::<_, Vec<_>>::new());
+    let hands_by_city = Mutex::new(FnvHashMap::<_, Vec<_>>::with_hasher(Default::default()));
     let mut all_hands = data::hands(None)
         .par_bridge()
         .map(|a| {
