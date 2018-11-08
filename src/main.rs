@@ -244,8 +244,20 @@ impl ParallelVariance {
         self.n * self.x
     }
 
+    fn corrected_var(self, c: f64) -> f64 {
+        self.m / (self.n - c)
+    }
+
+    fn pop_var(self) -> f64 {
+        self.corrected_var(0.0)
+    }
+
+    fn corrected_stdev(self, c: f64) -> f64 {
+        self.corrected_var(c).sqrt()
+    }
+
     fn pop_stdev(self) -> f64 {
-        self.m / self.n
+        self.corrected_stdev(0.0)
     }
 
     fn merge(a: Self, b: Self) -> Self {
