@@ -1,92 +1,15 @@
 #![allow(dead_code)]
 
-use fnv::{FnvHashSet, FnvHashMap};
+use fnv::FnvHashMap;
 use itertools::Itertools;
 use rayon::prelude::*;
-use std::cmp::Reverse;
-use std::collections::{hash_map::Entry, BinaryHeap, BTreeMap};
+use std::collections::BTreeMap;
 use std::iter::FromIterator;
 use std::sync::Mutex;
 use std::time::Instant;
 
 mod data;
-use self::data::{make_board, BoardGraph, Position};
 mod graph;
-
-fn shortest_path(g: &BoardGraph, a: Position, b: Position) -> (usize, Vec<Position>) {
-    shortest_path_any(g, a, |c| c == b)
-}
-
-fn shortest_path_any(
-    g: &BoardGraph,
-    a: Position,
-    f: impl Fn(Position) -> bool,
-) -> (usize, Vec<Position>) {
-    if f(a) {
-        return (0, vec![a]);
-    }
-
-    let mut distances = FnvHashMap::with_capacity_and_hasher(g.nodes().len(), Default::default());
-    let mut heap = BinaryHeap::with_capacity(g.edges().len());
-    heap.push((Reverse((0, 0)), (a, a)));
-    let (steps, total, last) = loop {
-        let (Reverse((d, s)), (n, p)) = heap.pop().unwrap();
-        if let Entry::Vacant(entry) = distances.entry(n) {
-            entry.insert(p);
-            if f(n) {
-                //println!("distances from {:?}: {:?}", a, distances);
-                //println!("{:?} to {:?} in {} ({} steps)", a, n, d, s);
-                break (s, d, n);
-            }
-
-            for (m, e) in g.neighbours(n) {
-                heap.push((Reverse((d + e.cost, s + 1)), (m, n)));
-            }
-        }
-    };
-    let mut path = Vec::with_capacity(steps + 1);
-    path.push(last);
-    loop {
-        let n = path.last().unwrap();
-        let p = distances.get(n).unwrap();
-        if n == p {
-            path.reverse();
-            return (total, path);
-        }
-        path.push(p.to_owned());
-    }
-}
-
-fn smallest_tree(g: &BoardGraph, ns: &[Position]) -> (usize, FnvHashSet<Position>) {
-    let first = ns
-        .iter()
-        .cloned()
-        .map(|p| shortest_path_any(&g, p, |x| x != p && ns.contains(&x)))
-        .min()
-        .unwrap();
-    let mut cost = first.0;
-    let mut reached = first.1.into_iter().collect::<FnvHashSet<_>>();
-    let mut unreached = ns
-        .iter()
-        .cloned()
-        .filter(|p| !reached.contains(p))
-        .collect::<FnvHashSet<_>>();
-    while let Some(best) = unreached
-        .iter()
-        .cloned()
-        .map(|p| shortest_path_any(&g, p, |x| x != p && reached.contains(&x)))
-        .min()
-    {
-        //println!("  {:?}", best);
-        cost += best.0;
-        for n in best.1 {
-            unreached.remove(&n);
-            reached.insert(n);
-        }
-    }
-    //println!("  cost {:?}", cost);
-    (cost, reached)
-}
 
 fn histogram<T: Ord>(it: impl Iterator<Item = T>) -> BTreeMap<T, usize> {
     let mut counts = BTreeMap::new();
@@ -97,15 +20,9 @@ fn histogram<T: Ord>(it: impl Iterator<Item = T>) -> BTreeMap<T, usize> {
 fn main() {
     let start_instant = Instant::now();
 
-    let g = make_board();
-    //println!("{} nodes; {} edges", g.node_count(), g.edge_count());
-    //println!("{:?}", g);
-
-    // let p = shortest_path(&g, Position(0, 4), Position(3, 4));
-    // println!("{:?}", p);
-
-    // let p = shortest_path(&g, Position(3, 4), Position(0, 4));
-    // println!("{:?}", p);
+    let g = data::make_board();
+    println!("Board has {} nodes & {} edges", g.nodes().count(), g.edges().count());
+    println!();
 
     let cities_by_pos = data::CITIES
         .iter()
@@ -125,7 +42,7 @@ fn main() {
                 }
             }
 
-            let hand = (smallest_tree(&g, &a), a);
+            let hand = (graph::steiner_mst(&g, a[0], a[1..].iter().cloned(), |e| 0+e.cost), a);
             for c in a.iter().cloned() {
                 hands_by_city
                     .lock()

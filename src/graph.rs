@@ -1,6 +1,8 @@
+use std::cmp::Reverse;
 use std::collections::hash_map::{Entry, HashMap, RandomState};
-use std::collections::HashSet;
+use std::collections::{BinaryHeap, HashSet};
 use std::hash::{BuildHasher, Hash};
+use std::ops::{Add, AddAssign};
 
 pub struct UnGraph<I, N, E, S = RandomState> {
     nodes: HashMap<I, N, S>,
@@ -43,8 +45,12 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
         self.nodes.iter_mut().map(|(k, v)| (*k, v))
     }
 
+    pub fn contains_node(&self, i: I) -> bool {
+        self.nodes.contains_key(&i)
+    }
+
     fn require_node(&self, i: I) {
-        assert!(self.nodes.contains_key(&i));
+        assert!(self.contains_node(i));
     }
 
     pub fn try_add_node(&mut self, i: I, n: N) -> Option<&mut N> {
@@ -110,4 +116,59 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
             .cloned()
             .map(move |j| (j, self.edges.get(&min_max(i, j)).unwrap()))
     }
+}
+
+pub fn steiner_mst<I, N, E, S, C>(
+    g: &UnGraph<I, N, E, S>,
+    seed: I,
+    terminals: impl Iterator<Item = I>,
+    cost: impl Fn(&E) -> C,
+) -> (C, UnGraph<I, (), (), S>)
+where
+    I: Copy + Ord + Hash,
+    S: Default + BuildHasher,
+    C: Copy + Ord + Default + Add<Output = C> + AddAssign,
+{
+    let mut tree_cost = C::default();
+    let mut tree = UnGraph::with_capacity(1, 0);
+    tree.add_node(seed, ());
+
+    let mut terminals = terminals.zip(0..).collect::<HashMap<_, usize, S>>();
+    let mut heap = BinaryHeap::new();
+    let mut incoming = HashMap::with_hasher(S::default());
+    while !terminals.is_empty() {
+        incoming.clear();
+        heap.clear();
+        heap.extend(
+            terminals
+                .iter()
+                .map(|t| Reverse((C::default(), *t.0, Err(*t.1)))),
+        );
+
+        let (mut prev, path_cost) = loop {
+            let Reverse((c, n, p)) = heap.pop().expect("tree not reachable from terminals");
+            if let Entry::Vacant(entry) = incoming.entry(n) {
+                entry.insert(p);
+
+                if tree.contains_node(n) {
+                    break (n, c);
+                }
+
+                for (m, e) in g.neighbours(n) {
+                    heap.push(Reverse((c + cost(e), m, Ok(n))));
+                }
+            }
+        };
+        tree_cost += path_cost;
+
+        while let &Ok(next) = incoming.get(&prev).unwrap() {
+            tree.add_node(next, ());
+            tree.add_edge(next, prev, ());
+            prev = next;
+        }
+
+        terminals.remove(&prev);
+    }
+
+    (tree_cost, tree)
 }
