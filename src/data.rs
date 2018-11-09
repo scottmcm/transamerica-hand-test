@@ -31,6 +31,12 @@ impl Hash for Position {
     }
 }
 
+impl Position {
+    pub fn shares_line(self, other: Position) -> bool {
+        self.0 == other.0 || self.1 == other.1 || (self.0 + other.1) == (self.1 + other.0)
+    }
+}
+
 #[rustfmt::skip]
 pub const CITIES: &[City] = &[
     City { pos: Position(0, 2), color: Green, name: "San Diego", dashed: true },

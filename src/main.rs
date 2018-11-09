@@ -17,11 +17,26 @@ fn histogram<T: Ord>(it: impl Iterator<Item = T>) -> BTreeMap<T, usize> {
     counts
 }
 
+fn steiner_one(g: &data::BoardGraph, hand: &[data::Position; 5]) -> (usize, data::Position) {
+    g.nodes()
+        .map(|(n, _)| n)
+        .filter(|n| hand.iter().cloned().any(|m| n.shares_line(m)))
+        .map(|n| {
+            let (c, _) = graph::steiner_mst(&g, n, hand.iter().cloned(), |e| 0 + e.cost);
+            (c, n)
+        }).min()
+        .unwrap()
+}
+
 fn main() {
     let start_instant = Instant::now();
 
     let g = data::make_board();
-    println!("Board has {} nodes & {} edges", g.nodes().count(), g.edges().count());
+    println!(
+        "Board has {} nodes & {} edges",
+        g.nodes().count(),
+        g.edges().count()
+    );
     println!();
 
     let cities_by_pos = data::CITIES
@@ -42,7 +57,7 @@ fn main() {
                 }
             }
 
-            let hand = (graph::steiner_mst(&g, a[0], a[1..].iter().cloned(), |e| 0+e.cost), a);
+            let hand = (steiner_one(&g, &a), a);
             for c in a.iter().cloned() {
                 hands_by_city
                     .lock()
@@ -71,8 +86,9 @@ fn main() {
         println!("histogram: {:?}", hist);
         let best = all_hands.first().unwrap();
         println!(
-            "best: {:?} {:?}",
+            "best: {:?} via {:?} {:?}",
             (best.0).0,
+            (best.0).1,
             best.1
                 .iter()
                 .map(|x| cities_by_pos.get(x).unwrap().name)
@@ -80,8 +96,9 @@ fn main() {
         );
         let median = &all_hands[all_hands.len() / 2];
         println!(
-            "median: {:?} {:?}",
+            "median: {:?} via {:?} {:?}",
             (median.0).0,
+            (median.0).1,
             median
                 .1
                 .iter()
@@ -90,8 +107,9 @@ fn main() {
         );
         let worst = all_hands.last().unwrap();
         println!(
-            "worst: {:?} {:?}",
+            "worst: {:?} via {:?} {:?}",
             (worst.0).0,
+            (worst.0).1,
             worst
                 .1
                 .iter()
@@ -120,8 +138,9 @@ fn main() {
         );
         let best = hands.first().unwrap();
         println!(
-            "best: {:?} {:?}",
+            "best: {:?} via {:?} {:?}",
             (best.0).0,
+            (best.0).1,
             best.1
                 .iter()
                 .map(|x| cities_by_pos.get(x).unwrap().name)
@@ -129,8 +148,9 @@ fn main() {
         );
         let median = &hands[hands.len() / 2];
         println!(
-            "median: {:?} {:?}",
+            "median: {:?} via {:?} {:?}",
             (median.0).0,
+            (median.0).1,
             median
                 .1
                 .iter()
@@ -139,8 +159,9 @@ fn main() {
         );
         let worst = hands.last().unwrap();
         println!(
-            "worst: {:?} {:?}",
+            "worst: {:?} via {:?} {:?}",
             (worst.0).0,
+            (worst.0).1,
             worst
                 .1
                 .iter()

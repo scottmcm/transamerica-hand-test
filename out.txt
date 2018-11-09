@@ -1,184 +1,184 @@
 Board has 188 nodes & 509 edges
 
 *** Everything ***
-mean: 28.62 stdev: 2.58
-histogram: {19: 1, 20: 7, 21: 46, 22: 126, 23: 283, 24: 516, 25: 992, 26: 1557, 27: 1964, 28: 2388, 29: 2511, 30: 2329, 31: 1891, 32: 1215, 33: 638, 34: 229, 35: 87, 36: 20, 37: 5, 38: 2}
-best: 19 ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
-median: 29 ["Los Angeles", "New Orleans", "St. Louis", "Duluth", "Winston"]
-worst: 38 ["Seattle", "Phoenix", "Omaha", "Buffalo", "Jacksonville"]
+mean: 28.13 stdev: 2.46
+histogram: {19: 1, 20: 7, 21: 56, 22: 145, 23: 343, 24: 694, 25: 1273, 26: 1772, 27: 2288, 28: 2594, 29: 2517, 30: 2235, 31: 1557, 32: 835, 33: 347, 34: 111, 35: 27, 36: 5}
+best: 19 via Position(0, 2) ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
+median: 28 via Position(11, 2) ["Medford", "Atlanta", "Salt Lake City", "Helena", "New York"]
+worst: 36 via Position(10, 2) ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Boston"]
 
 *** Green: San Diego (Position(0, 2)) ***
-mean: 27.17 (-1.4) stdev: 2.65 (+0.1)
-best: 19 ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
-median: 27 ["San Diego", "Dallas", "Kansas City", "Buffalo", "Jacksonville"]
-worst: 35 ["San Diego", "Memphis", "Salt Lake City", "Duluth", "Boston"]
+mean: 26.63 (-1.5) stdev: 2.54 (+0.1)
+best: 19 via Position(0, 2) ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
+median: 27 via Position(0, 2) ["San Diego", "Phoenix", "Santa Fe", "Helena", "Washington"]
+worst: 34 via Position(7, 9) ["San Diego", "New Orleans", "Denver", "Duluth", "Boston"]
 *** Green: Los Angeles (Position(0, 3)) ***
-mean: 27.73 (-0.9) stdev: 2.33 (-0.3)
-best: 21 ["Los Angeles", "Phoenix", "Santa Fe", "Cincinnati", "Washington"]
-median: 28 ["Los Angeles", "El Paso", "Oklahoma City", "Bismark", "Richmond"]
-worst: 35 ["Los Angeles", "Houston", "St. Louis", "Helena", "Boston"]
+mean: 27.24 (-0.9) stdev: 2.19 (-0.3)
+best: 21 via Position(0, 3) ["Los Angeles", "Phoenix", "Santa Fe", "Cincinnati", "Washington"]
+median: 27 via Position(0, 3) ["Los Angeles", "Memphis", "Salt Lake City", "Minneapolis", "Charleston"]
+worst: 33 via Position(0, 3) ["Los Angeles", "New Orleans", "St. Louis", "Bismark", "Boston"]
 *** Green: San Francisco (Position(0, 6)) ***
-mean: 28.88 (+0.3) stdev: 2.24 (-0.3)
-best: 23 ["San Francisco", "Phoenix", "Santa Fe", "Cincinnati", "Washington"]
-median: 29 ["San Francisco", "Houston", "Kansas City", "Minneapolis", "Jacksonville"]
-worst: 35 ["San Francisco", "New Orleans", "Kansas City", "Bismark", "Boston"]
+mean: 28.36 (+0.2) stdev: 2.10 (-0.4)
+best: 23 via Position(0, 6) ["San Francisco", "Phoenix", "Santa Fe", "Cincinnati", "Washington"]
+median: 28 via Position(0, 6) ["San Francisco", "Atlanta", "Denver", "Bismark", "Richmond"]
+worst: 34 via Position(0, 6) ["San Francisco", "New Orleans", "St. Louis", "Bismark", "Boston"]
 *** Green: Sacramento (Position(1, 7)) ***
-mean: 29.15 (+0.5) stdev: 2.30 (-0.3)
-best: 23 ["Sacramento", "Dallas", "Denver", "Helena", "Jacksonville"]
-median: 29 ["Sacramento", "New Orleans", "St. Louis", "Bismark", "Winston"]
-worst: 36 ["Sacramento", "New Orleans", "Oklahoma City", "Bismark", "Boston"]
+mean: 28.60 (+0.5) stdev: 2.16 (-0.3)
+best: 23 via Position(1, 7) ["Sacramento", "Dallas", "Denver", "Helena", "Jacksonville"]
+median: 29 via Position(13, 8) ["Sacramento", "Phoenix", "St. Louis", "Duluth", "Boston"]
+worst: 35 via Position(5, 7) ["Sacramento", "New Orleans", "Santa Fe", "Bismark", "Boston"]
 *** Green: Medford (Position(2, 9)) ***
-mean: 28.84 (+0.2) stdev: 2.43 (-0.2)
-best: 22 ["Medford", "Dallas", "Denver", "Helena", "Jacksonville"]
-median: 29 ["Medford", "Houston", "St. Louis", "Bismark", "Richmond"]
-worst: 37 ["Medford", "Phoenix", "Omaha", "Buffalo", "Jacksonville"]
+mean: 28.27 (+0.1) stdev: 2.30 (-0.2)
+best: 22 via Position(2, 9) ["Medford", "Dallas", "Denver", "Helena", "Jacksonville"]
+median: 28 via Position(2, 8) ["Medford", "Atlanta", "Salt Lake City", "Bismark", "Washington"]
+worst: 35 via Position(9, 1) ["Medford", "New Orleans", "Santa Fe", "Duluth", "Boston"]
 *** Green: Portland (Position(3, 11)) ***
-mean: 29.43 (+0.8) stdev: 2.53 (-0.1)
-best: 22 ["Portland", "Dallas", "Denver", "Helena", "Jacksonville"]
-median: 30 ["Portland", "Phoenix", "Denver", "Minneapolis", "Washington"]
-worst: 38 ["Portland", "Phoenix", "Omaha", "Buffalo", "Jacksonville"]
+mean: 29.03 (+0.9) stdev: 2.40 (-0.1)
+best: 22 via Position(3, 11) ["Portland", "Dallas", "Denver", "Helena", "Jacksonville"]
+median: 29 via Position(3, 8) ["Portland", "New Orleans", "Salt Lake City", "Cincinnati", "New York"]
+worst: 36 via Position(9, 1) ["Portland", "New Orleans", "Santa Fe", "Duluth", "Boston"]
 *** Green: Seattle (Position(4, 12)) ***
-mean: 29.13 (+0.5) stdev: 2.72 (+0.1)
-best: 21 ["Seattle", "Dallas", "Denver", "Helena", "Jacksonville"]
-median: 29 ["Seattle", "Memphis", "Kansas City", "Duluth", "Washington"]
-worst: 38 ["Seattle", "Phoenix", "Omaha", "Buffalo", "Jacksonville"]
+mean: 28.76 (+0.6) stdev: 2.55 (+0.1)
+best: 21 via Position(4, 12) ["Seattle", "Dallas", "Denver", "Helena", "Jacksonville"]
+median: 29 via Position(4, 12) ["Seattle", "Houston", "St. Louis", "Duluth", "Jacksonville"]
+worst: 36 via Position(10, 2) ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Boston"]
 *** Yellow: Santa Fe (Position(4, 4)) ***
-mean: 28.74 (+0.1) stdev: 2.68 (+0.1)
-best: 20 ["San Diego", "Phoenix", "Santa Fe", "Cincinnati", "Washington"]
-median: 29 ["San Francisco", "Houston", "Santa Fe", "Minneapolis", "Washington"]
-worst: 37 ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Boston"]
+mean: 28.32 (+0.2) stdev: 2.71 (+0.2)
+best: 20 via Position(0, 2) ["San Diego", "Phoenix", "Santa Fe", "Cincinnati", "Washington"]
+median: 28 via Position(3, 1) ["Seattle", "El Paso", "Santa Fe", "Helena", "Washington"]
+worst: 36 via Position(10, 2) ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Boston"]
 *** Yellow: Salt Lake City (Position(4, 8)) ***
-mean: 29.13 (+0.5) stdev: 2.38 (-0.2)
-best: 23 ["Sacramento", "New Orleans", "Salt Lake City", "Helena", "Jacksonville"]
-median: 29 ["Medford", "New Orleans", "Salt Lake City", "Buffalo", "Boston"]
-worst: 35 ["Seattle", "El Paso", "Salt Lake City", "Duluth", "Charleston"]
+mean: 28.48 (+0.4) stdev: 2.15 (-0.3)
+best: 23 via Position(1, 7) ["Sacramento", "New Orleans", "Salt Lake City", "Helena", "Jacksonville"]
+median: 29 via Position(13, 7) ["San Diego", "El Paso", "Salt Lake City", "Buffalo", "Washington"]
+worst: 34 via Position(3, 1) ["Seattle", "El Paso", "Salt Lake City", "Buffalo", "Charleston"]
 *** Yellow: Denver (Position(6, 7)) ***
-mean: 28.72 (+0.1) stdev: 2.46 (-0.1)
-best: 21 ["Seattle", "Dallas", "Denver", "Helena", "Jacksonville"]
-median: 29 ["San Francisco", "Dallas", "Denver", "Minneapolis", "Charleston"]
-worst: 36 ["Seattle", "Phoenix", "Denver", "Duluth", "Jacksonville"]
+mean: 28.27 (+0.1) stdev: 2.38 (-0.1)
+best: 21 via Position(4, 12) ["Seattle", "Dallas", "Denver", "Helena", "Jacksonville"]
+median: 28 via Position(11, 0) ["Portland", "Atlanta", "Denver", "Buffalo", "Jacksonville"]
+worst: 34 via Position(4, 9) ["Seattle", "New Orleans", "Denver", "Bismark", "Boston"]
 *** Yellow: Oklahoma City (Position(7, 4)) ***
-mean: 28.24 (-0.4) stdev: 2.73 (+0.2)
-best: 20 ["San Diego", "Phoenix", "Oklahoma City", "Cincinnati", "Washington"]
-median: 28 ["Portland", "Atlanta", "Oklahoma City", "Minneapolis", "Jacksonville"]
-worst: 36 ["Sacramento", "New Orleans", "Oklahoma City", "Bismark", "Boston"]
+mean: 27.84 (-0.3) stdev: 2.63 (+0.2)
+best: 20 via Position(0, 2) ["San Diego", "Phoenix", "Oklahoma City", "Cincinnati", "Washington"]
+median: 28 via Position(11, 3) ["Sacramento", "El Paso", "Oklahoma City", "Cincinnati", "Jacksonville"]
+worst: 35 via Position(5, 12) ["Seattle", "Phoenix", "Oklahoma City", "Duluth", "Charleston"]
 *** Yellow: Kansas City (Position(9, 6)) ***
-mean: 28.40 (-0.2) stdev: 2.55 (-0.0)
-best: 21 ["San Diego", "Phoenix", "Kansas City", "Cincinnati", "Washington"]
-median: 28 ["Seattle", "Atlanta", "Kansas City", "Buffalo", "Washington"]
-worst: 35 ["Seattle", "Phoenix", "Kansas City", "Buffalo", "Jacksonville"]
+mean: 27.92 (-0.2) stdev: 2.46 (+0.0)
+best: 21 via Position(0, 2) ["San Diego", "Phoenix", "Kansas City", "Cincinnati", "Washington"]
+median: 28 via Position(9, 3) ["Sacramento", "Houston", "Kansas City", "Cincinnati", "New York"]
+worst: 35 via Position(3, 1) ["Seattle", "El Paso", "Kansas City", "Buffalo", "Jacksonville"]
 *** Yellow: Omaha (Position(9, 8)) ***
-mean: 28.85 (+0.2) stdev: 2.40 (-0.2)
-best: 22 ["San Diego", "Phoenix", "Omaha", "Cincinnati", "Washington"]
-median: 29 ["Sacramento", "Phoenix", "Omaha", "Helena", "New York"]
-worst: 38 ["Seattle", "Phoenix", "Omaha", "Buffalo", "Jacksonville"]
+mean: 28.33 (+0.2) stdev: 2.24 (-0.2)
+best: 22 via Position(0, 2) ["San Diego", "Phoenix", "Omaha", "Cincinnati", "Washington"]
+median: 28 via Position(4, 6) ["Seattle", "Phoenix", "Omaha", "Cincinnati", "New York"]
+worst: 35 via Position(11, 5) ["Seattle", "El Paso", "Omaha", "Buffalo", "Jacksonville"]
 *** Yellow: St. Louis (Position(11, 6)) ***
-mean: 28.27 (-0.4) stdev: 2.71 (+0.1)
-best: 19 ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
-median: 28 ["Portland", "Memphis", "St. Louis", "Chicago", "Charleston"]
-worst: 36 ["Seattle", "Phoenix", "St. Louis", "Buffalo", "Charleston"]
+mean: 27.74 (-0.4) stdev: 2.50 (+0.0)
+best: 19 via Position(0, 2) ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
+median: 28 via Position(0, 6) ["San Francisco", "Memphis", "St. Louis", "Helena", "Washington"]
+worst: 35 via Position(2, 2) ["Seattle", "Phoenix", "St. Louis", "Buffalo", "Jacksonville"]
 *** Red: Phoenix (Position(2, 3)) ***
-mean: 28.89 (+0.3) stdev: 2.87 (+0.3)
-best: 20 ["San Diego", "Phoenix", "Santa Fe", "Cincinnati", "Washington"]
-median: 29 ["Sacramento", "Phoenix", "Omaha", "Helena", "Winston"]
-worst: 38 ["Seattle", "Phoenix", "Omaha", "Buffalo", "Jacksonville"]
+mean: 28.33 (+0.2) stdev: 2.65 (+0.2)
+best: 20 via Position(0, 2) ["San Diego", "Phoenix", "Santa Fe", "Cincinnati", "Washington"]
+median: 28 via Position(4, 6) ["Seattle", "Phoenix", "Kansas City", "Helena", "Washington"]
+worst: 35 via Position(2, 2) ["Seattle", "Phoenix", "St. Louis", "Buffalo", "Jacksonville"]
 *** Red: El Paso (Position(3, 1)) ***
-mean: 29.17 (+0.5) stdev: 2.52 (-0.1)
-best: 20 ["San Diego", "El Paso", "Oklahoma City", "Cincinnati", "Washington"]
-median: 29 ["Seattle", "El Paso", "Oklahoma City", "Bismark", "New York"]
-worst: 35 ["Seattle", "El Paso", "Omaha", "Buffalo", "Charleston"]
+mean: 28.66 (+0.5) stdev: 2.42 (-0.0)
+best: 20 via Position(0, 2) ["San Diego", "El Paso", "Oklahoma City", "Cincinnati", "Washington"]
+median: 29 via Position(1, 7) ["Sacramento", "El Paso", "Denver", "Bismark", "Jacksonville"]
+worst: 35 via Position(11, 5) ["Seattle", "El Paso", "Omaha", "Buffalo", "Jacksonville"]
 *** Red: Houston (Position(6, 0)) ***
-mean: 29.75 (+1.1) stdev: 2.13 (-0.4)
-best: 22 ["San Diego", "Houston", "Oklahoma City", "Cincinnati", "Washington"]
-median: 30 ["Sacramento", "Houston", "Kansas City", "Cincinnati", "Winston"]
-worst: 35 ["Los Angeles", "Houston", "St. Louis", "Helena", "Boston"]
+mean: 29.21 (+1.1) stdev: 2.17 (-0.3)
+best: 21 via Position(6, 2) ["San Diego", "Houston", "St. Louis", "Cincinnati", "Washington"]
+median: 29 via Position(4, 9) ["Seattle", "Houston", "Denver", "Cincinnati", "Jacksonville"]
+worst: 34 via Position(4, 9) ["Seattle", "Houston", "St. Louis", "Buffalo", "Charleston"]
 *** Red: Dallas (Position(7, 2)) ***
-mean: 27.86 (-0.8) stdev: 2.21 (-0.4)
-best: 19 ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
-median: 28 ["Sacramento", "Dallas", "Kansas City", "Chicago", "Boston"]
-worst: 34 ["San Diego", "Dallas", "Salt Lake City", "Bismark", "Boston"]
+mean: 27.49 (-0.6) stdev: 2.10 (-0.4)
+best: 19 via Position(0, 2) ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
+median: 28 via Position(7, 2) ["Los Angeles", "Dallas", "Oklahoma City", "Bismark", "Washington"]
+worst: 33 via Position(4, 9) ["Portland", "Dallas", "Santa Fe", "Duluth", "Charleston"]
 *** Red: New Orleans (Position(8, 0)) ***
-mean: 29.77 (+1.2) stdev: 2.35 (-0.2)
-best: 21 ["Seattle", "New Orleans", "Denver", "Helena", "Jacksonville"]
-median: 30 ["San Francisco", "New Orleans", "St. Louis", "Chicago", "New York"]
-worst: 37 ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Boston"]
+mean: 29.18 (+1.0) stdev: 2.31 (-0.1)
+best: 21 via Position(4, 12) ["Seattle", "New Orleans", "Denver", "Helena", "Jacksonville"]
+median: 29 via Position(3, 9) ["Portland", "New Orleans", "Kansas City", "Chicago", "Jacksonville"]
+worst: 36 via Position(10, 2) ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Boston"]
 *** Red: Memphis (Position(10, 3)) ***
-mean: 27.29 (-1.3) stdev: 2.16 (-0.4)
-best: 21 ["San Diego", "Memphis", "Oklahoma City", "Cincinnati", "Winston"]
-median: 27 ["Portland", "Memphis", "Denver", "Chicago", "Winston"]
-worst: 35 ["San Diego", "Memphis", "Salt Lake City", "Duluth", "Boston"]
+mean: 26.91 (-1.2) stdev: 2.05 (-0.4)
+best: 21 via Position(11, 4) ["San Diego", "Memphis", "Santa Fe", "Cincinnati", "Winston"]
+median: 27 via Position(14, 6) ["Sacramento", "Memphis", "Santa Fe", "Chicago", "New York"]
+worst: 34 via Position(6, 4) ["Seattle", "Memphis", "Santa Fe", "Minneapolis", "Boston"]
 *** Red: Atlanta (Position(11, 2)) ***
-mean: 27.61 (-1.0) stdev: 2.45 (-0.1)
-best: 21 ["Seattle", "Atlanta", "Denver", "Helena", "Jacksonville"]
-median: 28 ["Los Angeles", "Atlanta", "Denver", "Minneapolis", "Richmond"]
-worst: 35 ["Seattle", "Atlanta", "Santa Fe", "Duluth", "Boston"]
+mean: 27.13 (-1.0) stdev: 2.33 (-0.1)
+best: 21 via Position(10, 4) ["San Diego", "Atlanta", "Oklahoma City", "Cincinnati", "Jacksonville"]
+median: 27 via Position(2, 9) ["Medford", "Atlanta", "Denver", "Minneapolis", "Richmond"]
+worst: 35 via Position(11, 2) ["Seattle", "Atlanta", "Santa Fe", "Minneapolis", "Boston"]
 *** Blue: Helena (Position(6, 11)) ***
-mean: 27.44 (-1.2) stdev: 2.71 (+0.1)
-best: 21 ["Seattle", "Dallas", "Denver", "Helena", "Jacksonville"]
-median: 28 ["San Diego", "Phoenix", "Omaha", "Helena", "Washington"]
-worst: 35 ["Los Angeles", "Houston", "St. Louis", "Helena", "Boston"]
+mean: 27.05 (-1.1) stdev: 2.48 (+0.0)
+best: 21 via Position(4, 12) ["Seattle", "Dallas", "Denver", "Helena", "Jacksonville"]
+median: 27 via Position(2, 8) ["Medford", "Memphis", "Salt Lake City", "Helena", "New York"]
+worst: 33 via Position(0, 6) ["San Francisco", "New Orleans", "St. Louis", "Helena", "Boston"]
 *** Blue: Bismark (Position(10, 11)) ***
-mean: 29.22 (+0.6) stdev: 2.44 (-0.1)
-best: 22 ["Seattle", "Memphis", "St. Louis", "Bismark", "Winston"]
-median: 29 ["Portland", "Memphis", "Kansas City", "Bismark", "Boston"]
-worst: 37 ["Portland", "New Orleans", "Santa Fe", "Bismark", "Boston"]
+mean: 28.62 (+0.5) stdev: 2.34 (-0.1)
+best: 22 via Position(11, 4) ["Seattle", "Memphis", "St. Louis", "Bismark", "Winston"]
+median: 29 via Position(0, 3) ["Los Angeles", "Atlanta", "Salt Lake City", "Bismark", "Washington"]
+worst: 36 via Position(4, 1) ["Portland", "New Orleans", "Santa Fe", "Bismark", "Boston"]
 *** Blue: Minneapolis (Position(12, 10)) ***
-mean: 29.11 (+0.5) stdev: 2.33 (-0.2)
-best: 23 ["San Diego", "Dallas", "Kansas City", "Minneapolis", "Winston"]
-median: 29 ["Portland", "Phoenix", "Salt Lake City", "Minneapolis", "Washington"]
-worst: 37 ["Seattle", "New Orleans", "Santa Fe", "Minneapolis", "Boston"]
+mean: 28.56 (+0.4) stdev: 2.27 (-0.2)
+best: 23 via Position(9, 4) ["San Diego", "Dallas", "Kansas City", "Minneapolis", "Winston"]
+median: 29 via Position(10, 6) ["Los Angeles", "Atlanta", "Kansas City", "Minneapolis", "New York"]
+worst: 36 via Position(5, 5) ["Seattle", "New Orleans", "Santa Fe", "Minneapolis", "Boston"]
 *** Blue: Duluth (Position(13, 11)) ***
-mean: 30.19 (+1.6) stdev: 2.24 (-0.3)
-best: 23 ["San Diego", "Dallas", "St. Louis", "Duluth", "Washington"]
-median: 30 ["Portland", "Dallas", "Omaha", "Duluth", "Charleston"]
-worst: 37 ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Boston"]
+mean: 29.73 (+1.6) stdev: 2.10 (-0.4)
+best: 23 via Position(13, 8) ["San Diego", "Dallas", "St. Louis", "Duluth", "Washington"]
+median: 30 via Position(9, 10) ["San Francisco", "Memphis", "Denver", "Duluth", "Washington"]
+worst: 36 via Position(10, 2) ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Boston"]
 *** Blue: Cincinnati (Position(14, 7)) ***
-mean: 27.03 (-1.6) stdev: 2.31 (-0.3)
-best: 19 ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
-median: 27 ["Medford", "Phoenix", "Santa Fe", "Cincinnati", "Winston"]
-worst: 35 ["Seattle", "Phoenix", "Omaha", "Cincinnati", "Jacksonville"]
+mean: 26.53 (-1.6) stdev: 2.16 (-0.3)
+best: 19 via Position(0, 2) ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
+median: 27 via Position(6, 0) ["Los Angeles", "Houston", "Omaha", "Cincinnati", "Washington"]
+worst: 33 via Position(4, 6) ["Seattle", "Phoenix", "Omaha", "Cincinnati", "Jacksonville"]
 *** Blue: Chicago (Position(14, 9)) ***
-mean: 28.49 (-0.1) stdev: 2.26 (-0.3)
-best: 21 ["San Diego", "Dallas", "St. Louis", "Chicago", "Washington"]
-median: 29 ["San Diego", "Memphis", "Omaha", "Chicago", "Boston"]
-worst: 36 ["Seattle", "Phoenix", "Omaha", "Chicago", "Jacksonville"]
+mean: 27.85 (-0.3) stdev: 2.13 (-0.3)
+best: 21 via Position(0, 2) ["San Diego", "Dallas", "St. Louis", "Chicago", "Washington"]
+median: 28 via Position(9, 7) ["Sacramento", "New Orleans", "Denver", "Chicago", "Winston"]
+worst: 33 via Position(4, 0) ["Seattle", "Houston", "Santa Fe", "Chicago", "Charleston"]
 *** Blue: Buffalo (Position(17, 10)) ***
-mean: 28.85 (+0.2) stdev: 2.32 (-0.3)
-best: 21 ["San Diego", "Dallas", "St. Louis", "Buffalo", "Boston"]
-median: 29 ["San Francisco", "Memphis", "Salt Lake City", "Buffalo", "Charleston"]
-worst: 38 ["Seattle", "Phoenix", "Omaha", "Buffalo", "Jacksonville"]
+mean: 28.56 (+0.4) stdev: 2.24 (-0.2)
+best: 21 via Position(0, 2) ["San Diego", "Dallas", "St. Louis", "Buffalo", "Boston"]
+median: 29 via Position(0, 2) ["San Diego", "New Orleans", "Kansas City", "Buffalo", "Richmond"]
+worst: 35 via Position(11, 5) ["Seattle", "El Paso", "Omaha", "Buffalo", "Jacksonville"]
 *** Orange: Jacksonville (Position(11, 0)) ***
-mean: 28.14 (-0.5) stdev: 2.81 (+0.2)
-best: 21 ["Seattle", "Dallas", "Denver", "Helena", "Jacksonville"]
-median: 28 ["Sacramento", "New Orleans", "Kansas City", "Cincinnati", "Jacksonville"]
-worst: 38 ["Seattle", "Phoenix", "Omaha", "Buffalo", "Jacksonville"]
+mean: 27.64 (-0.5) stdev: 2.70 (+0.2)
+best: 21 via Position(10, 4) ["San Diego", "Atlanta", "Oklahoma City", "Cincinnati", "Jacksonville"]
+median: 28 via Position(0, 2) ["San Diego", "El Paso", "Salt Lake City", "Cincinnati", "Jacksonville"]
+worst: 35 via Position(11, 5) ["Seattle", "El Paso", "Omaha", "Buffalo", "Jacksonville"]
 *** Orange: Charleston (Position(13, 2)) ***
-mean: 28.81 (+0.2) stdev: 2.71 (+0.1)
-best: 21 ["Seattle", "Atlanta", "Denver", "Helena", "Charleston"]
-median: 29 ["Los Angeles", "Dallas", "St. Louis", "Buffalo", "Charleston"]
-worst: 36 ["Seattle", "Phoenix", "St. Louis", "Buffalo", "Charleston"]
+mean: 28.31 (+0.2) stdev: 2.60 (+0.1)
+best: 21 via Position(10, 4) ["San Diego", "Atlanta", "Oklahoma City", "Cincinnati", "Charleston"]
+median: 28 via Position(3, 8) ["Portland", "Houston", "Salt Lake City", "Bismark", "Charleston"]
+worst: 35 via Position(12, 5) ["Seattle", "Phoenix", "Kansas City", "Buffalo", "Charleston"]
 *** Orange: Winston (Position(13, 4)) ***
-mean: 27.57 (-1.1) stdev: 2.38 (-0.2)
-best: 21 ["San Diego", "Phoenix", "Oklahoma City", "Cincinnati", "Winston"]
-median: 28 ["Los Angeles", "Houston", "Denver", "Bismark", "Winston"]
-worst: 34 ["Seattle", "Phoenix", "Omaha", "Buffalo", "Winston"]
+mean: 27.08 (-1.1) stdev: 2.26 (-0.2)
+best: 21 via Position(12, 4) ["San Diego", "Phoenix", "Santa Fe", "Cincinnati", "Winston"]
+median: 27 via Position(9, 7) ["Sacramento", "New Orleans", "Salt Lake City", "Chicago", "Winston"]
+worst: 33 via Position(12, 4) ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Winston"]
 *** Orange: Richmond (Position(15, 5)) ***
-mean: 28.60 (-0.0) stdev: 2.32 (-0.3)
-best: 20 ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Richmond"]
-median: 29 ["Los Angeles", "Houston", "Santa Fe", "Minneapolis", "Richmond"]
-worst: 35 ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Richmond"]
+mean: 28.13 (-0.0) stdev: 2.16 (-0.3)
+best: 20 via Position(0, 2) ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Richmond"]
+median: 28 via Position(8, 5) ["Medford", "Dallas", "Oklahoma City", "Minneapolis", "Richmond"]
+worst: 34 via Position(12, 4) ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Richmond"]
 *** Orange: Washington (Position(16, 7)) ***
-mean: 28.54 (-0.1) stdev: 2.41 (-0.2)
-best: 19 ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
-median: 29 ["Los Angeles", "Atlanta", "St. Louis", "Bismark", "Washington"]
-worst: 36 ["Seattle", "New Orleans", "Santa Fe", "Minneapolis", "Washington"]
+mean: 28.04 (-0.1) stdev: 2.27 (-0.2)
+best: 19 via Position(0, 2) ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Washington"]
+median: 28 via Position(3, 11) ["Portland", "Phoenix", "Omaha", "Helena", "Washington"]
+worst: 35 via Position(5, 5) ["Seattle", "New Orleans", "Santa Fe", "Minneapolis", "Washington"]
 *** Orange: New York (Position(17, 8)) ***
-mean: 29.00 (+0.4) stdev: 2.32 (-0.3)
-best: 20 ["San Diego", "Dallas", "St. Louis", "Cincinnati", "New York"]
-median: 29 ["Medford", "Atlanta", "St. Louis", "Duluth", "New York"]
-worst: 36 ["Seattle", "New Orleans", "Santa Fe", "Minneapolis", "New York"]
+mean: 28.51 (+0.4) stdev: 2.22 (-0.2)
+best: 20 via Position(0, 2) ["San Diego", "Dallas", "St. Louis", "Cincinnati", "New York"]
+median: 29 via Position(0, 3) ["Los Angeles", "Atlanta", "Omaha", "Duluth", "New York"]
+worst: 35 via Position(6, 12) ["Seattle", "New Orleans", "Santa Fe", "Duluth", "New York"]
 *** Orange: Boston (Position(19, 10)) ***
-mean: 29.68 (+1.1) stdev: 2.56 (-0.0)
-best: 21 ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Boston"]
-median: 30 ["San Francisco", "New Orleans", "Kansas City", "Buffalo", "Boston"]
-worst: 37 ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Boston"]
+mean: 29.20 (+1.1) stdev: 2.41 (-0.1)
+best: 21 via Position(0, 2) ["San Diego", "Dallas", "St. Louis", "Cincinnati", "Boston"]
+median: 29 via Position(3, 1) ["Seattle", "El Paso", "Santa Fe", "Chicago", "Boston"]
+worst: 36 via Position(10, 2) ["Seattle", "New Orleans", "Santa Fe", "Duluth", "Boston"]
