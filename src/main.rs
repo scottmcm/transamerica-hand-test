@@ -147,7 +147,7 @@ fn main() {
     println!(
         "mean: {:.2} stdev: {:.2}",
         all_stats.mean(),
-        all_stats.pop_stdev()
+        all_stats.stdev_pop()
     );
     {
         let hist = histogram(all_hands.iter().map(|x| (x.0).0));
@@ -198,8 +198,8 @@ fn main() {
             "mean: {:.2} ({:+.1}) stdev: {:.2} ({:+.1})",
             stats.mean(),
             stats.mean() - all_stats.mean(),
-            stats.pop_stdev(),
-            stats.pop_stdev() - all_stats.pop_stdev()
+            stats.stdev_pop(),
+            stats.stdev_pop() - all_stats.stdev_pop(),
         );
         let best = hands.first().unwrap();
         println!(
@@ -252,20 +252,29 @@ impl ParallelVariance {
         self.n * self.x
     }
 
-    fn corrected_var(self, c: f64) -> f64 {
+    fn var_corrected(self, c: f64) -> f64 {
         self.m / (self.n - c)
     }
 
-    fn pop_var(self) -> f64 {
-        self.corrected_var(0.0)
+    fn var_pop(self) -> f64 {
+        self.var_corrected(0.0)
     }
 
-    fn corrected_stdev(self, c: f64) -> f64 {
-        self.corrected_var(c).sqrt()
+    fn stdev_corrected(self, c: f64) -> f64 {
+        self.var_corrected(c).sqrt()
     }
 
-    fn pop_stdev(self) -> f64 {
-        self.corrected_stdev(0.0)
+    fn stdev_pop(self) -> f64 {
+        self.stdev_corrected(0.0)
+    }
+
+    fn standardize_corrected(self, x: f64, c: f64) -> f64 {
+        let s = self.stdev_corrected(c);
+        (x - self.mean()) / s
+    }
+
+    fn standardize_pop(self, x: f64) -> f64 {
+        self.standardize_corrected(x, 0.0)
     }
 
     fn merge(a: Self, b: Self) -> Self {
