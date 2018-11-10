@@ -155,7 +155,9 @@ where
                 }
 
                 for (m, e) in g.neighbours(n) {
-                    heap.push(Reverse((c + cost(e), m, Ok(n))));
+                    if !incoming.contains_key(&m) {
+                        heap.push(Reverse((c + cost(e), m, Ok(n))));
+                    }
                 }
             }
         };
