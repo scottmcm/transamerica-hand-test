@@ -21,7 +21,6 @@ fn histogram<T: Ord>(it: impl Iterator<Item = T>) -> BTreeMap<T, usize> {
 fn steiner_one(g: &data::BoardGraph, hand: &[data::Position; 5]) -> (usize, data::Position) {
     g.nodes()
         .map(|(n, _)| n)
-        .filter(|n| hand.iter().cloned().any(|m| n.shares_line(m)))
 //    std::iter::once(hand[0])
         .map(|n| {
             //let (c, _) = graph::steiner_mst(&g, n, hand.iter().cloned(), |e| 0 + e.cost);
