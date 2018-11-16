@@ -174,3 +174,59 @@ where
 
     (tree_cost, tree)
 }
+
+pub fn steiner_mst_usize<I, N, E, S>(
+    g: &UnGraph<I, N, E, S>,
+    seed: I,
+    terminals: impl Iterator<Item = I>,
+    cost: impl Fn(&E) -> usize,
+) -> (usize, UnGraph<I, (), (), S>)
+where
+    I: Copy + Ord + Hash,
+    S: Default + BuildHasher,
+{
+    let mut tree_cost = 0;
+    let mut tree = UnGraph::with_capacity(1, 0);
+    tree.add_node(seed, ());
+
+    let mut terminals = terminals.zip(0..).collect::<HashMap<_, usize, S>>();
+    let mut heap = crate::bucket_queue::BucketQueue::default();
+    let mut incoming = HashMap::with_hasher(S::default());
+    while !terminals.is_empty() {
+        incoming.clear();
+        heap.clear();
+        heap.extend(
+            terminals
+                .iter()
+                .map(|t| (0, (*t.0, Err(*t.1)))),
+        );
+
+        let (mut prev, path_cost) = loop {
+            let (c, (n, p)) = heap.pop().expect("tree not reachable from terminals");
+            if let Entry::Vacant(entry) = incoming.entry(n) {
+                entry.insert(p);
+
+                if tree.contains_node(n) {
+                    break (n, c);
+                }
+
+                for (m, e) in g.neighbours(n) {
+                    if !incoming.contains_key(&m) {
+                        heap.push(c + cost(e), (m, Ok(n)));
+                    }
+                }
+            }
+        };
+        tree_cost += path_cost;
+
+        while let &Ok(next) = incoming.get(&prev).unwrap() {
+            tree.add_node(next, ());
+            tree.add_edge(next, prev, ());
+            prev = next;
+        }
+
+        terminals.remove(&prev);
+    }
+
+    (tree_cost, tree)
+}
