@@ -62,10 +62,11 @@ impl<B: Bag> CustomBucketQueue<B> {
 
     pub fn push(&mut self, priority: usize, extra: B::Item) {
         assert!(priority >= self.front);
-        while self.data.len() <= priority {
+        let delta = priority - self.front;
+        while self.data.len() <= delta {
             self.data.push_back(Default::default());
         }
-        self.data[priority - self.front].push(extra);
+        self.data[delta].push(extra);
     }
 
     pub fn pop(&mut self) -> Option<(usize, B::Item)> {
