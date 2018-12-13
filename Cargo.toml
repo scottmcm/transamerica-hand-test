@@ -10,3 +10,7 @@ publish = false
 itertools = "0.7"
 fnv = "1.0"
 rayon = "1.0"
+
+[profile.release]
+panic = "abort"
+lto = true
