@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-pub trait Bag: Default {
+pub trait Bag {
     type Item;
     fn clear(&mut self);
     fn push(&mut self, x: Self::Item);
@@ -60,7 +60,7 @@ impl<B: Bag> CustomBucketQueue<B> {
         self.front = 0;
     }
 
-    pub fn push(&mut self, priority: usize, extra: B::Item) {
+    pub fn push(&mut self, priority: usize, extra: B::Item) where B: Default {
         assert!(priority >= self.front);
         let delta = priority - self.front;
         while self.data.len() <= delta {
@@ -92,7 +92,7 @@ impl<B> Default for CustomBucketQueue<B> {
     }
 }
 
-impl<T, B: Bag<Item=T>> Extend<(usize, T)> for CustomBucketQueue<B> {
+impl<T, B: Bag<Item=T> + Default> Extend<(usize, T)> for CustomBucketQueue<B> {
     fn extend<I>(&mut self, it: I) where I: IntoIterator<Item=(usize, T)> {
         it.into_iter().for_each(|(p, x)| self.push(p, x));
     }
