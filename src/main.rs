@@ -51,14 +51,13 @@ fn main() {
     let mut all_hands = data::hands(None)
         .par_bridge()
         .map(|a| {
-            let mut g = g.clone();
-
-            // Don't go through cities you don't own
-            for c in data::CITIES {
-                if !a.contains(&c.pos) {
-                    g.remove_node(c.pos);
-                }
-            }
+            // // Don't go through cities you don't own
+            // let mut g = g.clone();
+            // for c in data::CITIES {
+            //     if !a.contains(&c.pos) {
+            //         g.remove_node(c.pos);
+            //     }
+            // }
 
             let hand = (steiner_one(&g, &a), a);
             for c in a.iter().cloned() {
