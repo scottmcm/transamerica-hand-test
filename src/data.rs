@@ -21,13 +21,19 @@ pub struct City {
     pub dashed: bool,
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[repr(align(2))]
 pub struct Position(pub u8, pub u8);
 
 impl Hash for Position {
     fn hash<H: Hasher>(&self, hasher: &mut H) {
         hasher.write_u16(((self.0 as u16) << 8) | self.1 as u16);
+    }
+}
+
+impl std::fmt::Debug for Position {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "P({},{})", self.0, self.1)
     }
 }
 
