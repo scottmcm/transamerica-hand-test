@@ -5,6 +5,7 @@ use std::hash::{BuildHasher, Hash};
 use std::ops::{Add, AddAssign};
 
 use crate::bucket_queue::BucketQueue;
+use crate::union_find::SimpleDisjointSet;
 
 pub struct UnGraph<I, N, E, S = RandomState> {
     nodes: HashMap<I, N, S>,
@@ -90,6 +91,11 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
         self.try_remove_node(i).expect("Node does not exist")
     }
 
+    pub fn get_edge(&self, i: I, j: I) -> Option<&E> {
+        debug_assert!(i != j);
+        self.edges.get(&min_max(i, j))
+    }
+
     pub fn edges(&self) -> impl ExactSizeIterator<Item = (I, I, &E)> + Clone {
         self.edges.iter().map(|(k, v)| (k.0, k.1, v))
     }
@@ -99,6 +105,7 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
     }
 
     pub fn contains_edge(&self, i: I, j: I) -> bool {
+        debug_assert!(i != j);
         self.edges.contains_key(&min_max(i, j))
     }
 
@@ -128,6 +135,38 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
             .map(move |j| (j, self.edges.get(&min_max(i, j)).unwrap()))
     }
 }
+
+pub fn kruskal_mst_len_usize<I, S>(
+    metric_closure: &UnGraph<I, (), usize, S>,
+    nodes: &[I],
+) -> usize
+where
+    I: Copy + Ord + Hash,
+    S: BuildHasher + Default,
+{
+    let mut queue = BucketQueue::default();
+    for (i, &n) in nodes.iter().enumerate() {
+        for (j, &m) in nodes.iter().enumerate() {
+            if i > j {
+                let d = *metric_closure.get_edge(n, m).unwrap();
+                queue.push(d, (i, j));
+            }
+        }
+    }
+
+    let mut mst_len = 0;
+
+    let mut forest = SimpleDisjointSet::new(nodes.len());
+    while forest.set_count() > 1 {
+        let (d, (i, j)) = queue.pop().unwrap();
+        if forest.union(i, j) {
+            mst_len += d;
+        }
+    }
+
+    mst_len
+}
+
 
 pub fn metric_closure_usize<I, N, E, S>(
     g: &UnGraph<I, N, E, S>,

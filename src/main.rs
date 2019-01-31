@@ -19,18 +19,6 @@ fn histogram<T: Ord>(it: impl Iterator<Item = T>) -> BTreeMap<T, usize> {
     counts
 }
 
-fn steiner_one(g: &data::BoardGraph, hand: &[data::Position; 5]) -> (usize, data::Position) {
-    g.nodes()
-        .map(|(n, _)| n)
-//    std::iter::once(hand[0])
-        .map(|n| {
-            //let (c, _) = graph::steiner_mst(&g, n, hand.iter().cloned(), |e| 0 + e.cost);
-            let (c, _) = graph::steiner_mst_usize(&g, n, hand.iter().cloned(), |e| 0 + e.cost);
-            (c, n)
-        }).min()
-        .unwrap()
-}
-
 fn main() {
     let start_instant = Instant::now();
 
@@ -42,6 +30,8 @@ fn main() {
     );
     println!();
 
+    let metric_closure = graph::metric_closure_usize(&g, |e| 0 + e.cost);
+
     let cities_by_pos = data::CITIES
         .iter()
         .map(|x| (x.pos, *x))
@@ -51,15 +41,21 @@ fn main() {
     let mut all_hands = data::hands(None)
         .par_bridge()
         .map(|a| {
-            // // Don't go through cities you don't own
-            // let mut g = g.clone();
-            // for c in data::CITIES {
-            //     if !a.contains(&c.pos) {
-            //         g.remove_node(c.pos);
-            //     }
-            // }
+            let best = g.nodes()
+                .map(|(n, _)| n)
+                .filter(|n| !a.contains(n))
+                .map(|n| {
+                    let mut extended_hand = [n; 6];
+                    extended_hand[..5].copy_from_slice(&a);
+                    let c = graph::kruskal_mst_len_usize(&metric_closure, &extended_hand);
+                    (c, n)
+                }).min()
+                .unwrap();
 
-            let hand = (steiner_one(&g, &a), a);
+            //let kmst = graph::kruskal_mst_len_usize(&metric_closure, &a);
+            //dbg!((kmst, a));
+            //let hand = ((kmst, 0), a);
+            let hand = (best, a);
             for c in a.iter().cloned() {
                 hands_by_city
                     .lock()
