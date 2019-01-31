@@ -25,8 +25,8 @@ fn main() {
     let g = data::make_board();
     println!(
         "Board has {} nodes & {} edges",
-        g.nodes().count(),
-        g.edges().count()
+        g.nodes().len(),
+        g.edges().len(),
     );
     println!();
 
@@ -41,8 +41,7 @@ fn main() {
     let mut all_hands = data::hands(None)
         .par_bridge()
         .map(|a| {
-            let best = g.nodes()
-                .map(|(n, _)| n)
+            let best = g.node_ids()
                 .filter(|n| !a.contains(n))
                 .map(|n| {
                     let mut extended_hand = [n; 6];
