@@ -4,6 +4,8 @@ use std::collections::{BinaryHeap, HashSet};
 use std::hash::{BuildHasher, Hash};
 use std::ops::{Add, AddAssign};
 
+use crate::bucket_queue::BucketQueue;
+
 pub struct UnGraph<I, N, E, S = RandomState> {
     nodes: HashMap<I, N, S>,
     edges: HashMap<(I, I), E, S>,
@@ -37,7 +39,11 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
         }
     }
 
-    pub fn nodes(&self) -> impl ExactSizeIterator<Item = (I, &N)> {
+    pub fn node_ids(&self) -> impl ExactSizeIterator<Item = I> + Clone + '_ {
+        self.nodes.keys().cloned()
+    }
+
+    pub fn nodes(&self) -> impl ExactSizeIterator<Item = (I, &N)> + Clone {
         self.nodes.iter().map(|(k, v)| (*k, v))
     }
 
@@ -84,7 +90,7 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
         self.try_remove_node(i).expect("Node does not exist")
     }
 
-    pub fn edges(&self) -> impl ExactSizeIterator<Item = (I, I, &E)> {
+    pub fn edges(&self) -> impl ExactSizeIterator<Item = (I, I, &E)> + Clone {
         self.edges.iter().map(|(k, v)| (k.0, k.1, v))
     }
 
@@ -92,7 +98,12 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
         self.edges.iter_mut().map(|(k, v)| (k.0, k.1, v))
     }
 
+    pub fn contains_edge(&self, i: I, j: I) -> bool {
+        self.edges.contains_key(&min_max(i, j))
+    }
+
     pub fn try_add_edge(&mut self, i: I, j: I, e: E) -> Option<&mut E> {
+        assert!(i != j);
         self.require_node(i);
         self.require_node(j);
         if let Entry::Vacant(v) = self.edges.entry(min_max(i, j)) {
@@ -116,6 +127,53 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
             .cloned()
             .map(move |j| (j, self.edges.get(&min_max(i, j)).unwrap()))
     }
+}
+
+pub fn metric_closure_usize<I, N, E, S>(
+    g: &UnGraph<I, N, E, S>,
+    cost: impl Fn(&E) -> usize,
+) -> UnGraph<I, (), usize, S>
+where
+    I: Copy + Ord + Hash,
+    S: Default + BuildHasher,
+{
+    let mut closure = UnGraph::with_capacity(g.nodes().len(), g.nodes().len());
+    g.node_ids().for_each(|n| closure.add_node(n, ()));
+    g.node_ids().for_each(|n| {
+        let distances = dijkstra_usize(g, n, &cost);
+        distances.nodes().for_each(|(m, d)| {
+            if n != m {
+                closure.try_add_edge(n, m, *d);
+            }
+        });
+    });
+    closure
+}
+
+pub fn dijkstra_usize<I, N, E, S>(
+    g: &UnGraph<I, N, E, S>,
+    seed: I,
+    cost: impl Fn(&E) -> usize,
+) -> UnGraph<I, usize, (), S>
+where
+    I: Copy + Ord + Hash,
+    S: Default + BuildHasher,
+{
+    let mut distances = UnGraph::with_capacity(g.nodes().len(), 0);
+
+    let mut queue = BucketQueue::default();
+    queue.push(0, seed);
+    while let Some((d, n)) = queue.pop() {
+        if distances.try_add_node(n, d).is_some() {
+            for (m, e) in g.neighbours(n) {
+                if !distances.contains_node(m) {
+                    queue.push(d + cost(e), m);
+                }
+            }
+        }
+    }
+
+    distances
 }
 
 pub fn steiner_mst<I, N, E, S, C>(
@@ -190,7 +248,7 @@ where
     tree.add_node(seed, ());
 
     let mut terminals = terminals.zip(0..).collect::<HashMap<_, usize, S>>();
-    let mut heap = crate::bucket_queue::BucketQueue::default();
+    let mut heap = BucketQueue::default();
     let mut incoming = HashMap::with_hasher(S::default());
     while !terminals.is_empty() {
         incoming.clear();

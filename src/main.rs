@@ -8,9 +8,10 @@ use std::iter::FromIterator;
 use std::sync::Mutex;
 use std::time::Instant;
 
+mod bucket_queue;
 mod data;
 mod graph;
-mod bucket_queue;
+mod union_find;
 
 fn histogram<T: Ord>(it: impl Iterator<Item = T>) -> BTreeMap<T, usize> {
     let mut counts = BTreeMap::new();

@@ -50,6 +50,7 @@ impl<T: Ord> Bag for std::collections::BinaryHeap<T> {
 pub struct CustomBucketQueue<B> {
     data: VecDeque<B>,
     front: usize,
+    len: usize,
 }
 
 pub type BucketQueue<T> = CustomBucketQueue<Vec<T>>;
@@ -58,6 +59,7 @@ impl<B: Bag> CustomBucketQueue<B> {
     pub fn clear(&mut self) {
         self.data.iter_mut().for_each(|x| x.clear());
         self.front = 0;
+        self.len = 0;
     }
 
     pub fn push(&mut self, priority: usize, extra: B::Item) where B: Default {
@@ -67,19 +69,33 @@ impl<B: Bag> CustomBucketQueue<B> {
             self.data.push_back(Default::default());
         }
         self.data[delta].push(extra);
+        self.len += 1;
     }
 
     pub fn pop(&mut self) -> Option<(usize, B::Item)> {
         loop {
             let first = self.data.front_mut()?;
             if let Some(x) = first.pop() {
+                self.len -= 1;
                 return Some((self.front, x));
             }
 
             let first = self.data.pop_front().unwrap();
             self.front += 1;
             self.data.push_back(first);
+
+            if self.is_empty() {
+                return None;
+            }
         }
+    }
+
+    pub fn len(&self) -> usize {
+        self.len
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
     }
 }
 
@@ -88,6 +104,7 @@ impl<B> Default for CustomBucketQueue<B> {
         Self {
             data: Default::default(),
             front: 0,
+            len: 0,
         }
     }
 }
