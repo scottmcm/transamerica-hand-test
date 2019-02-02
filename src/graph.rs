@@ -144,21 +144,23 @@ where
     I: Copy + Ord + Hash,
     S: BuildHasher + Default,
 {
-    let mut queue = BucketQueue::default();
+    let mut queue = Vec::with_capacity(nodes.len() * (nodes.len() - 1) / 2);
     for (i, &n) in nodes.iter().enumerate() {
         for (j, &m) in nodes.iter().enumerate() {
             if i > j {
                 let d = *metric_closure.get_edge(n, m).unwrap();
-                queue.push(d, (i, j));
+                queue.push((d, (i, j)));
             }
         }
     }
+    queue.sort_by_key(|x| x.0);
+    let mut queue = queue.into_iter();
 
     let mut mst_len = 0;
 
     let mut forest = SimpleDisjointSet::new(nodes.len());
     while forest.set_count() > 1 {
-        let (d, (i, j)) = queue.pop().unwrap();
+        let (d, (i, j)) = queue.next().unwrap();
         if forest.union(i, j) {
             mst_len += d;
         }
@@ -166,7 +168,6 @@ where
 
     mst_len
 }
-
 
 pub fn metric_closure_usize<I, N, E, S>(
     g: &UnGraph<I, N, E, S>,
