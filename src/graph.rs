@@ -136,7 +136,7 @@ impl<I: Copy + Ord + Hash, N, E, S: BuildHasher + Default> UnGraph<I, N, E, S> {
     }
 }
 
-pub fn kruskal_mst_len_usize<I, S>(
+pub fn kruskal_mst_weight_usize<I, S>(
     metric_closure: &UnGraph<I, (), usize, S>,
     nodes: &[I],
 ) -> usize

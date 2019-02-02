@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+#![feature(slice_sort_by_cached_key)]
 
 use fnv::FnvHashMap;
 use itertools::Itertools;
@@ -37,18 +38,27 @@ fn main() {
         .map(|x| (x.pos, *x))
         .collect::<FnvHashMap<_, _>>();
 
+    let mut all_positions: Vec<_> = g.node_ids().collect();
+    all_positions.sort_by_cached_key(|&n|
+        data::CITIES.iter().map(|x| x.pos)
+        .map(|x| if x == n { 0 } else { *metric_closure.get_edge(n, x).unwrap() })
+        .sum::<usize>()
+    );
+
     let hands_by_city = Mutex::new(FnvHashMap::<_, Vec<_>>::with_hasher(Default::default()));
     let mut all_hands = data::hands(None)
         .par_bridge()
         .map(|a| {
-            let best = g.node_ids()
+            let best = all_positions
+                .iter()
+                .cloned()
                 .filter(|n| !a.contains(n))
                 .map(|n| {
                     let mut extended_hand = [n; 6];
                     extended_hand[..5].copy_from_slice(&a);
-                    let c = graph::kruskal_mst_len_usize(&metric_closure, &extended_hand);
+                    let c = graph::kruskal_mst_weight_usize(&metric_closure, &extended_hand);
                     (c, n)
-                }).min()
+                }).min_by_key(|x| x.0)
                 .unwrap();
 
             //let kmst = graph::kruskal_mst_len_usize(&metric_closure, &a);
