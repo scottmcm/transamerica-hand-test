@@ -40,31 +40,42 @@ fn main() {
 
     let mut all_positions: Vec<_> = g.node_ids().collect();
     all_positions.sort_by_cached_key(|&n|
-        data::CITIES.iter().map(|x| x.pos)
-        .map(|x| if x == n { 0 } else { *metric_closure.get_edge(n, x).unwrap() })
-        .sum::<usize>()
+        data::CITIES.iter()
+            .map(|x| x.pos)
+            .map(|x| if x == n { 0 } else { *metric_closure.get_edge(n, x).unwrap() })
+            .sum::<usize>()
     );
 
     let hands_by_city = Mutex::new(FnvHashMap::<_, Vec<_>>::with_hasher(Default::default()));
     let mut all_hands = data::hands(None)
         .par_bridge()
         .map(|a| {
-            let best = all_positions
-                .iter()
-                .cloned()
-                .filter(|n| !a.contains(n))
-                .map(|n| {
-                    let mut extended_hand = [n; 6];
-                    extended_hand[..5].copy_from_slice(&a);
-                    let c = graph::kruskal_mst_weight_usize(&metric_closure, &extended_hand);
-                    (c, n)
-                }).min_by_key(|x| x.0)
-                .unwrap();
+            let mut points = a.to_vec();
+            let mut kmst = graph::kruskal_mst_weight_usize(&metric_closure, &points);
+            loop {
+                //eprintln!("{} with {:?}", kmst, points);
+                let best = all_positions
+                    .iter()
+                    .cloned()
+                    .filter_map(|n| {
+                        if points.contains(&n) { return None }
 
-            //let kmst = graph::kruskal_mst_len_usize(&metric_closure, &a);
-            //dbg!((kmst, a));
-            //let hand = ((kmst, 0), a);
-            let hand = (best, a);
+                        points.push(n);
+                        let c = graph::kruskal_mst_weight_usize(&metric_closure, &points);
+                        points.pop();
+                        if c < kmst { Some((c, n))} else { None }
+                    })
+                    .min_by_key(|x| x.0);
+                if let Some((c, n)) = best {
+                    kmst = c;
+                    points.push(n);
+                } else {
+                    break;
+                }
+            }
+
+            points.drain(..5);
+            let hand = ((kmst, points), a);
             for c in a.iter().cloned() {
                 hands_by_city
                     .lock()
