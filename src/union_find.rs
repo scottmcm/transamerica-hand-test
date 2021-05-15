@@ -77,8 +77,8 @@ impl SimpleDisjointSet {
         debug_assert!(self.1 > 1);
         self.1 -= 1;
         let [x, y] = unsafe {
-            let x: *mut _ = &mut self.0.get_unchecked_mut(x);
-            let y: *mut _ = &mut self.0.get_unchecked_mut(y);
+            let x: *mut Entry = self.0.get_unchecked_mut(x);
+            let y: *mut Entry = self.0.get_unchecked_mut(y);
             debug_assert_ne!(x, y);
             [&mut *x, &mut *y]
         };

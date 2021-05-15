@@ -1,5 +1,4 @@
 #![allow(dead_code)]
-#![feature(slice_sort_by_cached_key)]
 
 use fnv::FnvHashMap;
 use itertools::Itertools;
